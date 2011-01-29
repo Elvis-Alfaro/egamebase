@@ -20,10 +20,14 @@ public abstract class EGameBase : BaseBehaviour {
 	[SerializeField]
 	public NetworkController networkController;	
 	
-	public TaskQueue beginning;
+	public TaskQueue beginning; 
 	public TaskQueue levelEnding;
 	public TaskQueue gameFinished ;
 	public ScorePanel score;
+	public FlyObject flyingGameScore;
+	public FlyObject flyingTickScore;
+	private int addGameScore = 0; 
+	private int addTickScore = 0; 
 	
 	//protected int levelProgress = 0;
 	protected const int TOTAL_SCORE_PER_LEVEL = 1000;
@@ -90,8 +94,26 @@ public abstract class EGameBase : BaseBehaviour {
 			Debug.LogError("Can't find msgWindow");
 			return;
 		}
-
 		
+		if (this.flyingGameScore != null)
+		{
+			this.flyingGameScore.OnTaskComplete += delegate(Task thisObj)
+			{
+				thisObj.gameObject.transform.position = new Vector3(200000, 200000, 200000);
+				AddScore(this.addGameScore);
+				this.PlayAudio("Score");
+			};
+		}
+		
+		if (this.flyingTickScore != null)
+		{
+			this.flyingTickScore.OnTaskComplete += delegate(Task thisObj)
+			{
+				thisObj.gameObject.transform.position = new Vector3(200000, 200000, 200000);
+				AddScore(this.addTickScore);
+				this.PlayAudio("Score");
+			};
+		}
 		
 		UI.OnTimeOver += delegate(){
 			OnTimeOver();
@@ -231,8 +253,46 @@ public abstract class EGameBase : BaseBehaviour {
 		});
 	}
 	
+	protected void AddScore(){
+		int addScore = (int)((UI.GetTickValue()*costTimePercentage + (1-costTimePercentage))*TOTAL_SCORE_PER_LEVEL/totalRoundPerLevel);	
+		AddScore(addScore);
+		scoreInLevel += addScore;
+	}
 	
-		
+	protected void AddGameScore(Vector3 from, Vector3 dest)
+	{
+		addGameScore = (int)((1-costTimePercentage)*TOTAL_SCORE_PER_LEVEL/totalRoundPerLevel);
+		GameObject go = GameObject.Find("/FlyingGameScore");
+		AddScore(go,1,from,dest);
+	}
+	
+	protected void AddTickScore(Vector3 from, Vector3 dest)
+	{
+		addTickScore = (int)(UI.GetTickValue()*costTimePercentage*TOTAL_SCORE_PER_LEVEL/totalRoundPerLevel);
+		GameObject go = GameObject.Find("/FlyingTickScore");
+		AddScore(go,0,from,dest);
+	}
+	
+	private void AddScore(GameObject go,int type, Vector3 from, Vector3 dest){
+		if (go != null)
+		{
+			int value = addGameScore;
+			// this.addScore = addValue;
+			if(type == 0)
+				value = addTickScore;
+			go.renderer.material.SetTexture("_MainTex", this.score.GenerateTexture(value));
+			FlyObject score = go.GetComponent<FlyObject>() as FlyObject;
+			score.FromPos = from;
+			score.DestPos = dest;
+			Debug.LogError("");
+			score.StartTask();// 开始任务
+		}
+	}
+	
+	protected void UpdateProgress(){
+		UpdateProgress((int)(1/(float)totalRoundPerLevel*100));
+	}
+	
 	//
 	protected virtual void OnAction(bool isRight){		
 		round ++ ;
@@ -321,7 +381,7 @@ public abstract class EGameBase : BaseBehaviour {
 		}
 	}
 	
-	private void LogOnServer(int complete, int correct, int total)
+	protected void LogOnServer(int complete, int correct, int total)
 	{
 		this.commit(complete, correct, total);
 	}
@@ -335,7 +395,7 @@ public abstract class EGameBase : BaseBehaviour {
 		UI.Playable = playable;				
 	}
 	
-	private void UpdateProgress(int newValue){
+	protected void UpdateProgress(int newValue){
 		UI.UpdateProgress(newValue);
 	}
 			
