@@ -1,0 +1,3 @@
+EGameBase存放路径：\Assets\Scripts\JiaoYuScripts\EGameBase
+
+建议把其它属于EGAME中用到的一些比如HighLight、Draggable等等实现某种特效的文件放到这个目录里面，以方便统一管理使用。
