@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="diablo.douban" android:versionCode="1" android:versionName="1.0">
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
+		<activity android:name=".DoubanDiablo" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".LoginActivity" android:label="@string/douban_auth">
+		</activity>
+		<activity android:name=".UserAuthorizationActivity" android:label="@string/douban_auth">
+		</activity>
+		<activity android:name=".glance.ReviewTabActivity" android:label="@string/douban_auth"
+			 android:theme="@android:style/Theme.NoTitleBar">
+		</activity>
+		<activity android:name=".glance.BookReview" android:label="@string/douban_auth">
+		</activity>
+		<activity android:name=".glance.MovieReview" android:label="@string/douban_auth">
+		</activity>
+		<activity android:name=".glance.MusicReview" android:label="@string/douban_auth">
+		</activity>
+		<activity android:name=".glance.ItemContentActivity"
+			android:label="@string/item_content_label"
+			android:theme="@android:style/Theme.Dialog">
+		</activity>
+		
+		<activity android:name=".broadcast.SayingActivity"
+			android:theme="@android:style/Theme.Light" android:label="@string/broadcast">
+		</activity>
+		<activity android:name=".broadcast.CommentsActivity"
+			android:theme="@android:style/Theme.Light" android:label="@string/comments">
+		</activity>
+		<activity android:name=".doumail.ComposeDoumailActivity"
+			android:theme="@android:style/Theme.Dialog" android:label="@string/send_doumail">
+		</activity>
+		<activity android:name=".relationship.ContactsActivity"
+			android:theme="@android:style/Theme.Light" android:label="@string/my_contacts">
+		</activity>
+		
+		<activity android:name=".doumail.DoumailListActivity"
+			android:theme="@android:style/Theme.Light" android:label="@string/doumail_inbox">
+		</activity>
+		
+		<activity android:name="BrowserActivity" android:label="Browser"
+			android:launchMode="singleTask" android:alwaysRetainTaskState="true"
+			android:configChanges="orientation|keyboardHidden" >
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />				
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" />
+			</intent-filter>
+		</activity>
+	</application> 
+	<uses-sdk android:minSdkVersion="7" />
+	
+
+</manifest> 
