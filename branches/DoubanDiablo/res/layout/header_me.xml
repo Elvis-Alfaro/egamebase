@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@color/douban_bg_color"
+	android:padding="10dip"
+	>
+	 <ImageView
+     	android:id="@+id/imageview" 
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content" 
+     	android:src="@drawable/doubanlogo"/>
+     	<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:gravity="right"
+			android:layout_gravity="right"
+			android:layout_height="wrap_content">
+			<TextView android:id="@+id/welcome" 
+				android:layout_gravity="center_vertical"
+				android:text="@string/welcome"
+				android:gravity="right"
+				android:paddingRight="10dip"
+				android:layout_height="wrap_content"
+    			android:layout_width="wrap_content" /> 
+    		<diablo.douban.common.LoaderImageView android:id="@+id/thumbnailMe"
+				android:layout_width="wrap_content" 
+				android:gravity="right"
+				android:layout_height="wrap_content"
+				/>
+		</LinearLayout>
+</LinearLayout>

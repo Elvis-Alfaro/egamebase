@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:orientation="vertical" 
+	android:layout_height="fill_parent"
+	android:background="@color/douban_bg_color"
+	android:padding="6dip"
+	android:id="@+id/layout">
+	<RelativeLayout 
+		android:layout_height="wrap_content" 
+		android:orientation="horizontal"
+		android:layout_gravity="center_vertical"
+		android:layout_width="fill_parent">
+		<TextView android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:textColor="@color/link_color"
+				android:id="@+id/currentUser" />
+		<Button android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"				
+				android:id="@+id/changeUser"
+				android:text="@string/changeUser" 
+				android:layout_alignParentRight="true"
+				android:padding="5px"
+				android:background="@drawable/android_btn" />
+	</RelativeLayout>
+	<LinearLayout 
+		android:layout_height="wrap_content" 
+		android:orientation="horizontal"
+		android:layout_gravity="center_vertical"
+		android:layout_width="fill_parent">
+		<TextView 
+			android:id="@+id/to_user"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:textColor="@color/link_color"
+			android:layout_gravity="center_vertical"
+			android:text="@string/to_user"
+			/>
+		<view class="diablo.douban.common.LoaderImageView"
+			android:id="@+id/to_user_img"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"			
+			android:padding="2dip"
+			android:gravity="right"
+			/>
+		
+	</LinearLayout>
+	<LinearLayout 
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent">
+		<TextView 			
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:textColor="@color/link_color"
+			android:text="@string/title"
+			/>
+		<EditText 
+			android:layout_height="wrap_content" 
+			android:id="@+id/doumailTitle"
+			android:ems="15"			
+			android:layout_width="fill_parent" />
+	</LinearLayout>
+	
+	<LinearLayout 
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent">
+		<view 
+		    class="diablo.douban.common.MultiLineEditor"
+		    android:id="@+id/doumailContent"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@android:color/transparent"
+		    android:padding="5dip"
+		    android:lines="3"
+		    android:scrollbars="vertical"
+		    android:fadingEdge="vertical"
+		    android:gravity="top"
+		    android:textSize="22sp"
+		    android:capitalize="sentences"
+		/>
+	</LinearLayout>
+	
+	<LinearLayout 
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:layout_width="fill_parent">
+		<view class="diablo.douban.common.LoaderImageView"
+			android:id="@+id/doumail_verify_img"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"			
+			android:padding="2dip"
+			android:visibility="gone"
+			/>
+		<EditText 
+			android:layout_height="wrap_content" 
+			android:id="@+id/doumail_verify_text"
+			android:visibility="gone"
+			android:ems="6"			
+			android:layout_width="wrap_content" />
+	</LinearLayout>
+	
+	<LinearLayout 
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:layout_width="fill_parent">
+		<Button android:layout_height="wrap_content" 
+			android:layout_width="wrap_content"
+			android:id="@+id/submit"
+			 android:padding="5dip"
+			android:background="@drawable/android_btn"
+			android:text="@string/submit"/>
+		<Button android:layout_height="wrap_content" 
+			android:layout_width="wrap_content"
+			 android:padding="5dip"
+			android:background="@drawable/android_btn"
+			android:id="@+id/cancle"
+			android:text="@string/cancle"/>
+	</LinearLayout>
+	
+</LinearLayout>

@@ -1,0 +1,8 @@
+<resources>
+	<style name="Douban" parent="android:Theme.Light">
+		
+		<item name="@android:background">#FFC8D6E4</item>	
+		
+		<item name="@android:listDivider">@android:color/white</item>
+	</style>
+</resources>

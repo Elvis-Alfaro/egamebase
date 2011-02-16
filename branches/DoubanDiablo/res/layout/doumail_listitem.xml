@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" 
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"	
+	android:padding="2dip"
+	>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:paddingTop="6dip"
+	>
+		<diablo.douban.common.LoaderImageView android:id="@+id/saying_thumbnail"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"			
+			android:orientation="vertical"
+			android:padding="2dip"				
+			/>
+	</LinearLayout>
+		
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:paddingLeft="5dip"			
+			android:paddingRight="5dip"		
+			>	
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:paddingLeft="4dip">
+				<TextView android:id="@+id/doumail_title" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/link_color"						
+					android:textSize="15px" />
+			</LinearLayout>
+			
+			
+			<RelativeLayout
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:padding="5dip"
+				
+				>
+				<Button android:id="@id/user" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 					
+					android:background="@drawable/android_linkbtn"
+					android:textSize="13px" /> 
+				<TextView android:id="@+id/newDoubail" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:text="@string/new_doumail"
+					android:textColor="#FFFF0000"
+					android:textSize="13px"
+					android:layout_toRightOf="@id/user" /> 
+			
+				<TextView android:id="@+id/doumail_time" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"  
+					android:textColor="#FFAAAAAA"
+					android:layout_alignParentRight="true"
+					/>				
+			</RelativeLayout>	
+			<LinearLayout 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"	
+				android:layout_gravity="right"			
+				android:paddingLeft="2dip"
+				android:paddingRight="8dip"
+				android:paddingBottom="10dip">						
+				<Button android:id="@+id/doumail_detail" 
+					android:layout_width="wrap_content"
+					android:text="@string/btn_detail"
+					android:background="@drawable/android_linkbtn"
+					android:layout_height="wrap_content" 
+					android:textColor="@color/link_color"
+					android:textSize="13px"
+					/>
+				<Button android:id="@+id/doumail_delete" 
+					android:layout_width="wrap_content"
+					android:text="@string/delete"					
+					android:background="@drawable/android_linkbtn"
+					android:layout_height="wrap_content" 
+					android:textColor="@color/link_color"
+					android:textSize="13px" 
+					
+					/>
+			</LinearLayout>
+			
+		</LinearLayout>			
+
+</LinearLayout>
