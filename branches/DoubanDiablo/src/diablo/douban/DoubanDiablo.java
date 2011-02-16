@@ -15,6 +15,7 @@ import diablo.douban.accessor.pojo.Doumail;
 import diablo.douban.broadcast.SayingActivity;
 import diablo.douban.doumail.ComposeDoumailActivity;
 import diablo.douban.doumail.DoumailListActivity;
+import diablo.douban.search.SearchActivity;
 
 public class DoubanDiablo extends Activity {
 	private static final String TAG = "DoubanDiablo";
@@ -59,7 +60,7 @@ public class DoubanDiablo extends Activity {
 //			mail.setTo(me);
 //			mail.setFrom(me);
 //			intent.putExtra(ComposeDoumailActivity.DOUMAIL, mail);
-			Intent intent = new Intent(this, SayingActivity.class);
+			Intent intent = new Intent(this, SearchActivity.class);
 			
 			startActivity(intent);
 		} else {
