@@ -67,8 +67,6 @@ public class DoubanDiablo extends Activity {
 			startActivity(intent);
 			//Intent intent = new Intent(this, ComposeDoumailActivity.class);
 			//startActivity(intent);
-			//Intent intent = new Intent(this, ComposeDoumailActivity.class);
-			//startActivity(intent);
 		}
 		// SharedPreferences.Editor editor = pref.edit();
 		// editor.putString("accessToken", accessToken);
