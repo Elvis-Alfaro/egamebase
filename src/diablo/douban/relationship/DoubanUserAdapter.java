@@ -16,11 +16,11 @@ import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanUser;
 import diablo.douban.common.LoaderImageView;
 
-public class ContactAdapter extends BaseAdapter {
+public class DoubanUserAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private List<DoubanUser> mData;
 
-	public ContactAdapter(Context context, List<DoubanUser> mData) {
+	public DoubanUserAdapter(Context context, List<DoubanUser> mData) {
 		this.mInflater = LayoutInflater.from(context);
 		this.mData = mData;
 	}

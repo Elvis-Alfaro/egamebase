@@ -53,6 +53,9 @@
 				<data android:scheme="http" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".search.SearchActivity"
+			android:theme="@android:style/Theme.Light" android:label="@string/search">
+		</activity>
 	</application> 
 	<uses-sdk android:minSdkVersion="7" />
 	

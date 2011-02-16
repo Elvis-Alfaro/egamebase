@@ -20,6 +20,8 @@
     <string name="auth_text">请在完成授权后，点击下方的“完成授权”按钮，以完成授权。当然你也可以不先授权，随便看看。</string>    
     <string name="test">测试</string>
     
+    <string name="search">搜索</string>
+    
     <string name="comments">详情及评论</string>
     <string name="btn_detail">详情</string>
     <string name="btn_doumail">豆邮</string>

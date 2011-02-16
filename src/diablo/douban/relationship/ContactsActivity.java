@@ -44,7 +44,7 @@ public class ContactsActivity extends ListActivity {
 	
 	SharedPreferences.Editor editor;
 	
-	ContactAdapter adapter;
+	DoubanUserAdapter adapter;
 	TextView paginatorTitle;
 	Button prePage, nextPage;
 	//List<Map<String, Object>> mData = new ArrayList<Map<String, Object>>();
@@ -90,7 +90,7 @@ public class ContactsActivity extends ListActivity {
 			}
 		});
 		
-		ContactAdapter adapter = new ContactAdapter(this, new ArrayList<DoubanUser>());
+		DoubanUserAdapter adapter = new DoubanUserAdapter(this, new ArrayList<DoubanUser>());
 		setListAdapter(adapter);	
 		showDialog(PROGRESS_DIALOG);
 	}
@@ -259,7 +259,7 @@ public class ContactsActivity extends ListActivity {
 					LoaderImageView.loadDataIntoMap(b.getIcon());
 				}
 			}
-			adapter =  new ContactAdapter(activity, list);				
+			adapter =  new DoubanUserAdapter(activity, list);				
 			
 			total = 100;
 			Message msg = mHandler.obtainMessage();
