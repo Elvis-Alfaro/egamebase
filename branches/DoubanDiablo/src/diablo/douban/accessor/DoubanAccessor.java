@@ -475,6 +475,31 @@ public class DoubanAccessor {
 		return null;
 	}
 	
+	public List<DoubanUser> searchUser(String keyword, int start, int length){
+		List<DoubanUser> matchList = new ArrayList<DoubanUser>();
+		String url = PEOPLE_SEARCH + "?q=" + keyword + "&start-index=" + start + "&max-results=" + length;
+		Document doc = getDocument(url);
+		NodeList entryList = doc.getElementsByTagName("entry");
+		
+		for (int i = 0; i < entryList.getLength(); i++) {
+			matchList.add(parseUser(entryList.item(i)));
+		}
+		
+		if (doc.getElementsByTagName("openSearch:totalResults").getLength() > 0) {
+			totalResults = doc.getElementsByTagName("openSearch:totalResults")
+					.item(0).getFirstChild().getNodeValue();
+		}
+		if (doc.getElementsByTagName("openSearch:itemsPerPage").getLength() > 0) {
+			itemsPerPage = doc.getElementsByTagName("openSearch:itemsPerPage")
+					.item(0).getFirstChild().getNodeValue();
+		}
+		if (doc.getElementsByTagName("openSearch:startIndex").getLength() > 0) {
+			startIndex = doc.getElementsByTagName("openSearch:startIndex")
+					.item(0).getFirstChild().getNodeValue();
+		}
+		return matchList;
+	}
+	
 	public List<DoubanBroadcast> getBroadcast(String type, String uid, int start, int max) {
 		String url = null;
 		if(type.equals("broadcast")){
