@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, DoubanDiablo!</string>
+    <string name="app_name">Douban Diablo</string>
+    
+    <string name="welcome">欢迎你，</string>
+    <string name="username">登录邮箱：</string>
+    <string name="password">登录密码：</string>
+    <string name="look_around">随便看看</string>
+    <string name="auth_button_label">登录并授权</string>
+    <string name="app_introduce">　　豆瓣手机Android客户端，为豆友们提供一些定制的小功能。目前正在摸索开发中……</string>
+    <string name="about_author">Diablo即大菠萝，暴雪游戏“暗黑破坏神”</string>
+    <string name="about_oauth">关于oauth授权：</string>
+    
+    <string name ="item_content_label">详细信息</string>
+    <string name="douban_auth">豆瓣授权</string>
+    <string name="finish_auth_btn">完成授权</string>
+    <string name="cancle_auth_btn">取消授权</string>
+    <string name="reload_auth_btn">随便看看</string>
+    <string name="auth_text">请在完成授权后，点击下方的“完成授权”按钮，以完成授权。当然你也可以不先授权，随便看看。</string>    
+    <string name="test">测试</string>
+    
+    <string name="comments">详情及评论</string>
+    <string name="btn_detail">详情</string>
+    <string name="btn_doumail">豆邮</string>
+    <string name="doumail_inbox">收件箱</string>
+    <string name="new_doumail">(New~~)</string>
+    
+    <string name="send_doumail">发豆邮</string>
+    
+    <string name="changeUser">更改用户</string>
+    <string name="deleteToken">取消登录</string>
+    <string name="add_account">添加授权用户</string>
+    
+    <string name="pre_page">上页</string>
+    <string name="next_page">下页</string>
+    <string name="my_contacts">我关注的人</string>
+    <string name="I_say">我说</string>
+    <string name="broadcast">友邻广播</string>
+    <string name="reply">回应</string>
+    <string name="refreshPage">刷新页面</string>
+    
+    <string name="submit">提交</string>
+    <string name="cancle">撤销</string>
+    <string name="to_user">寄给：</string>
+    <string name="title">标题：</string>
+    <string name="delete">删除</string>
+    
+    
+</resources>

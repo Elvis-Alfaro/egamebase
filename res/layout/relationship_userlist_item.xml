@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="#FFFFFFFF"
+	android:padding="10dip">
+	<diablo.douban.common.LoaderImageView android:id="@+id/loaderImageView"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		>
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:paddingLeft="10dip">
+			
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dip">
+				<TextView android:id="@+id/title" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:textColor="#FF666666"
+					android:textSize="20px" />
+	
+				<TextView android:id="@+id/info" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:textColor="#FF888888"
+					android:textSize="13px" />
+			</LinearLayout>
+			
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:gravity="right">
+				<Button android:id="@+id/view_btn"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"		        
+			        android:text="@string/btn_detail"
+			        android:textColor="@color/link_color"
+					android:layout_gravity="right"
+			        android:background="@drawable/android_linkbtn"/>
+			        
+			   	<Button android:id="@+id/doumail_btn"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"		        
+			        android:text="@string/btn_doumail"
+			        android:textColor="@color/link_color"	
+					android:layout_gravity="right"			       
+			        android:background="@drawable/android_linkbtn"/>
+		   </LinearLayout>
+		</LinearLayout>
+		
+		
+	</diablo.douban.common.LoaderImageView>
+
+</LinearLayout>

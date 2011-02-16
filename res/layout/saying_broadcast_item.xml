@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" 
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"	
+	android:padding="2dip"
+	>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:paddingTop="6dip"
+	>
+		<diablo.douban.common.LoaderImageView android:id="@+id/saying_thumbnail"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"			
+			android:orientation="vertical"
+			android:padding="2dip"	
+					
+			/>
+	</LinearLayout>
+		
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:paddingLeft="5dip"
+			
+			android:paddingRight="5dip"		
+			>
+			
+			<RelativeLayout
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:padding="5dip"
+				
+				>
+				<Button android:id="@+id/saying_user" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:textColor="@color/link_color"
+					android:background="@drawable/android_linkbtn"
+					android:textSize="15px" /> 
+			
+				<TextView android:id="@+id/saying_time" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:textColor="#FFCCCCCC"
+					android:layout_alignParentRight="true"
+					/>				
+			</RelativeLayout>		
+			<LinearLayout android:orientation="horizontal"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dip">
+				<WebView android:id="@+id/saying_detail" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"						
+					android:textSize="13px" />
+			</LinearLayout>
+			
+			<RelativeLayout 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"				
+				android:paddingLeft="2dip"
+				android:paddingRight="8dip"
+				android:paddingBottom="10dip">
+				<TextView android:id="@+id/saying_reply" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:textColor="#FF666666"
+					/>				
+				<Button android:id="@+id/saying_reply_btn" 
+					android:layout_width="wrap_content"
+					android:text="@string/reply"					
+					android:background="@drawable/android_btn"
+					android:layout_height="wrap_content" 
+					android:textColor="#FF888888"
+					android:textSize="13px" 
+					android:layout_alignParentRight="true"
+					android:layout_below="@id/saying_reply"
+					/>
+			</RelativeLayout>
+			
+		</LinearLayout>			
+
+</LinearLayout>

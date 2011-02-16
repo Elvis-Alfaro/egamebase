@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"	
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:padding="10dip"
+	android:background="@color/douban_bg_color">	 
+			<TextView android:id="@+id/paginatorTitle" 
+				android:layout_gravity="center_vertical"
+				android:text="@string/welcome"
+				android:textColor="#FF219A44"
+				android:gravity="left"
+				android:paddingRight="10dip"
+				android:layout_height="wrap_content"
+    			android:layout_width="wrap_content" /> 
+    		<LinearLayout android:orientation="horizontal"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:gravity="right">
+				
+	    		<Button android:id="@+id/prePage" 				
+					android:text="@string/pre_page"
+					android:paddingRight="10dip"
+					android:textColor="#FF888888"						
+				    android:background="@drawable/android_linkbtn"
+					android:layout_height="wrap_content"
+	    			android:layout_width="wrap_content" /> 
+	    		<Button android:id="@+id/nextPage" 
+					android:textColor="#FF888888"				
+					android:background="@drawable/android_linkbtn"
+					android:text="@string/next_page"
+					android:paddingRight="10dip"
+					android:layout_height="wrap_content"
+	    			android:layout_width="wrap_content" /> 
+ 			</LinearLayout>
+</LinearLayout>

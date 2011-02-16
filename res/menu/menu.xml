@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/menu_my_contacts" android:title="@string/my_contacts" />
+	<item android:id="@+id/menu_broadcast" android:title="@string/broadcast" />
+	<item android:id="@+id/menu_refresh" android:title="@string/refreshPage" />
+	<item android:id="@+id/menu_changeUser" android:title="@string/changeUser">
+		<menu></menu>
+	</item>
+</menu>
