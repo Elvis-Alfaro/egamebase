@@ -15,7 +15,7 @@ import android.widget.TextView;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.Doumail;
-import diablo.douban.broadcast.AbstractProgressListActivity;
+import diablo.douban.common.AbstractProgressListActivity;
 import diablo.douban.common.LoaderImageView;
 
 public class DoumailListActivity extends AbstractProgressListActivity{

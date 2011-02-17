@@ -23,6 +23,7 @@ import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.broadcast.ViewHolder;
+import diablo.douban.common.AbstractProgressListActivity;
 import diablo.douban.common.HeadViewInflateHelper;
 import diablo.douban.common.LoaderImageView;
 

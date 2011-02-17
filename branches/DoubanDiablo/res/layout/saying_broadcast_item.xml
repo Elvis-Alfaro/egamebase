@@ -38,7 +38,7 @@
 					android:layout_height="wrap_content" 
 					android:textColor="@color/link_color"
 					android:background="@drawable/android_linkbtn"
-					android:textSize="15px" /> 
+					android:textSize="13px" /> 
 			
 				<TextView android:id="@+id/saying_time" 
 					android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
 				<WebView android:id="@+id/saying_detail" 
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"						
-					android:textSize="13px" />
+					android:textSize="12px" />
 			</LinearLayout>
 			
 			<RelativeLayout 

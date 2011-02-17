@@ -1,4 +1,4 @@
-package diablo.douban.broadcast;
+package diablo.douban.common;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,24 +6,25 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.TextView;
-import diablo.douban.DoubanDiablo;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 import diablo.douban.LoginActivity;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
-import diablo.douban.common.HeadViewInflateHelper;
-import diablo.douban.common.LoaderImageView;
+import diablo.douban.broadcast.SayingActivity;
 import diablo.douban.relationship.ContactsActivity;
 
 public abstract class AbstractProgressListActivity extends ListActivity{
@@ -39,12 +40,30 @@ public abstract class AbstractProgressListActivity extends ListActivity{
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.listview);
 		activity = this;
 		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData.getCurrent().getUsername(), DoubanAuthData.getCurrent().getIcon());
 		this.getListView().addHeaderView(headView);
 
 		SharedPreferences sp = getSharedPreferences("token", MODE_WORLD_WRITEABLE);		
 		editor = sp.edit();		
+		
+		final Gallery g = (Gallery) findViewById(R.id.gallery);
+		final ImageAdapter adapter = new ImageAdapter(this);
+	    g.setAdapter(adapter);
+	    g.setSelection(Integer.MAX_VALUE/2);
+	    
+	    g.setOnItemClickListener(new OnItemClickListener() {
+	        public void onItemClick(AdapterView parent, View v, int position, long id) {
+	        	if (position >= ImageAdapter.mImageIds.length) {
+	                position = position % ImageAdapter.mImageIds.length;
+	            }
+	        	ImageAdapter.currentSelection = position;
+	        	adapter.notifyDataSetChanged();
+	        	//((ImageView)v).setImageResource(ImageAdapter.mImageIds[position]);
+	            Toast.makeText(AbstractProgressListActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+	        }
+	    });
 	}
 	
 	@Override
