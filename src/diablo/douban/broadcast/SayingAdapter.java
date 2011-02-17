@@ -109,6 +109,7 @@ public class SayingAdapter  extends BaseAdapter {
 		}
 		//holder.info.setText(title);
 		holder.detail.setBackgroundColor(0);
+		holder.detail.getSettings().setDefaultFontSize(12);
 		holder.detail.loadDataWithBaseURL (null, bd.getContent(), "text/html", "utf-8",null);
 		//holder.detail.setVisibility(View.GONE);
 		/*if(bd.getMap().get("image") != null){  

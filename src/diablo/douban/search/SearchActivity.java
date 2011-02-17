@@ -17,7 +17,7 @@ import android.widget.TextView;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanUser;
-import diablo.douban.broadcast.AbstractProgressListActivity;
+import diablo.douban.common.AbstractProgressListActivity;
 import diablo.douban.common.LoaderImageView;
 import diablo.douban.relationship.DoubanUserAdapter;
 
