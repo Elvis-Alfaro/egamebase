@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,7 @@ public class SayingAdapter  extends BaseAdapter {
 			//holder.info.setVisibility(View.GONE);
 			holder.replyText = (TextView) convertView.findViewById(R.id.saying_reply);
 			holder.reply = (Button) convertView.findViewById(R.id.saying_reply_btn);
-			holder.detail = (WebView)convertView.findViewById(R.id.saying_detail);
+			holder.detail = (TextView)convertView.findViewById(R.id.saying_detail);
 			holder.time = (TextView) convertView.findViewById(R.id.saying_time);
 			//holder.detailImg = (LoaderImageView)convertView.findViewById(R.id.saying_image);
 			convertView.setTag(holder);
@@ -108,9 +109,12 @@ public class SayingAdapter  extends BaseAdapter {
 			holder.reply.setVisibility(View.GONE);
 		}
 		//holder.info.setText(title);
-		holder.detail.setBackgroundColor(0);
-		holder.detail.getSettings().setDefaultFontSize(12);
-		holder.detail.loadDataWithBaseURL (null, bd.getContent(), "text/html", "utf-8",null);
+		//holder.detail.setBackgroundColor(0);
+		//holder.detail.getSettings().setDefaultFontSize(12);
+		//holder.detail.loadDataWithBaseURL (null, bd.getContent(), "text/html", "utf-8",null);
+		holder.detail.setMovementMethod(LinkMovementMethod.getInstance());
+		holder.detail.setText(android.text.Html.fromHtml(bd.getContent()));
+		
 		//holder.detail.setVisibility(View.GONE);
 		/*if(bd.getMap().get("image") != null){  
 			holder.detailImg.setImageDrawable(bd.getMap().get("image"));
@@ -151,7 +155,7 @@ final class ViewHolder {
 	public Button user;
 	public TextView info;
 	public TextView time;
-	public WebView detail;
+	public TextView detail;
 	public TextView replyText;
 	public Button reply;
 }

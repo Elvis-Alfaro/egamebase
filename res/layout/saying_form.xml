@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
-    android:background="@color/douban_bg_color">
+   >
    					  
     <EditText android:id="@+id/sayingContent" 
         android:lines="1"

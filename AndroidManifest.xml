@@ -28,20 +28,20 @@
 		</activity>
 		
 		<activity android:name=".broadcast.SayingActivity"
-			android:theme="@android:style/Theme.Light" android:label="@string/broadcast">
+			 android:label="@string/broadcast">
 		</activity>
 		<activity android:name=".broadcast.CommentsActivity"
-			android:theme="@android:style/Theme.Light" android:label="@string/comments">
+			 android:label="@string/comments">
 		</activity>
 		<activity android:name=".doumail.ComposeDoumailActivity"
 			android:theme="@android:style/Theme.Dialog" android:label="@string/send_doumail">
 		</activity>
 		<activity android:name=".relationship.ContactsActivity"
-			android:theme="@android:style/Theme.Light" android:label="@string/my_contacts">
+			 android:label="@string/my_contacts">
 		</activity>
 		
 		<activity android:name=".doumail.DoumailListActivity"
-			android:theme="@android:style/Theme.Light" android:label="@string/doumail_inbox">
+			 android:label="@string/doumail_inbox">
 		</activity>
 		
 		<activity android:name="BrowserActivity" android:label="Browser"
@@ -54,7 +54,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".search.SearchActivity"
-			android:theme="@android:style/Theme.Light" android:label="@string/search">
+			 android:label="@string/search">
 		</activity>
 	</application> 
 	<uses-sdk android:minSdkVersion="7" />
