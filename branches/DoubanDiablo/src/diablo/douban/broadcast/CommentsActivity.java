@@ -6,25 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
-import diablo.douban.broadcast.ViewHolder;
 import diablo.douban.common.AbstractProgressListActivity;
-import diablo.douban.common.HeadViewInflateHelper;
 import diablo.douban.common.LoaderImageView;
 
 public class CommentsActivity extends AbstractProgressListActivity {	
@@ -107,7 +101,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 		holder.replyText.setText(curBd.getMap().get("comment"));
 		
 		
-		holder.detail = (WebView) view.findViewById(R.id.saying_detail);
+		holder.detail = (TextView) view.findViewById(R.id.saying_detail);
 		holder.detail.setBackgroundColor(0); 
 		holder.time = (TextView) view.findViewById(R.id.saying_time);
 		holder.time.setVisibility(View.GONE); 
@@ -123,8 +117,9 @@ public class CommentsActivity extends AbstractProgressListActivity {
 			title = "หตฃบ" + title;
 			
 		}
-		//holder.info.setText(title);
-		holder.detail.loadDataWithBaseURL (null, curBd.getContent(), "text/html", "utf-8",null);
+		holder.detail.setMovementMethod(LinkMovementMethod.getInstance());
+		holder.detail.setText(android.text.Html.fromHtml(curBd.getContent()));
+		//holder.detail.loadDataWithBaseURL (null, curBd.getContent(), "text/html", "utf-8",null);
 		return view;
 	}
 
