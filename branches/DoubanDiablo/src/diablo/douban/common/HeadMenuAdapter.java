@@ -14,23 +14,23 @@ public class HeadMenuAdapter extends BaseAdapter {
     private Context mContext;
 
     public static Integer[] mImageIds = {
-            R.drawable.book,
-            R.drawable.book,
-            R.drawable.book,
-            R.drawable.book,
-            R.drawable.book,
-            R.drawable.book,
-            R.drawable.book,
+    		R.drawable.m_homepage,                        
+            R.drawable.m_friend,
+            R.drawable.m_movie,
+            R.drawable.m_book,            
+            R.drawable.m_music,
+            R.drawable.m_doumail,
+            R.drawable.m_search,
     };
-    public static int currentSelection = -1;
-    public static Integer[] mImageIdsDisabled = {
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
-        R.drawable.book_disabled,
+    public static int currentSelection = 0;
+    public static Integer[] mImageIdsDisabled = {    	
+    	R.drawable.m_homepage_disabled,                        
+        R.drawable.m_friend_disabled,
+        R.drawable.m_movie_disabled,
+        R.drawable.m_book_disabled,        
+        R.drawable.m_music_disabled,
+        R.drawable.m_doumail_disabled,
+        R.drawable.m_search_disabled,
     };
 
     public HeadMenuAdapter(Context c) {
@@ -77,7 +77,7 @@ public class HeadMenuAdapter extends BaseAdapter {
         }else{
         	i.setImageResource(mImageIdsDisabled[position]);
         }
-        i.setLayoutParams(new Gallery.LayoutParams(40, 40));
+        i.setLayoutParams(new Gallery.LayoutParams(60, 40));
         i.setScaleType(ImageView.ScaleType.FIT_XY);
         //i.setBackgroundResource(mGalleryItemBackground);
         return i;

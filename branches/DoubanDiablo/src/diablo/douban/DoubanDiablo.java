@@ -10,12 +10,7 @@ import android.util.Log;
 import diablo.douban.accessor.DiabloDatabase;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
-import diablo.douban.accessor.pojo.DoubanUser;
-import diablo.douban.accessor.pojo.Doumail;
-import diablo.douban.broadcast.SayingActivity;
-import diablo.douban.doumail.ComposeDoumailActivity;
-import diablo.douban.doumail.DoumailListActivity;
-import diablo.douban.search.SearchActivity;
+import diablo.douban.common.HomepageActivity;
 
 public class DoubanDiablo extends Activity {
 	private static final String TAG = "DoubanDiablo";
@@ -60,7 +55,7 @@ public class DoubanDiablo extends Activity {
 //			mail.setTo(me);
 //			mail.setFrom(me);
 //			intent.putExtra(ComposeDoumailActivity.DOUMAIL, mail);
-			Intent intent = new Intent(this, SayingActivity.class);
+			Intent intent = new Intent(this, HomepageActivity.class);
 			
 			startActivity(intent);
 		} else {

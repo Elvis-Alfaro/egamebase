@@ -53,6 +53,9 @@
 				<data android:scheme="http" />
 			</intent-filter>
 		</activity>
+		
+		<activity android:name=".common.HomepageActivity">
+		</activity>
 		<activity android:name=".search.SearchActivity"
 			 android:label="@string/search">
 		</activity>
