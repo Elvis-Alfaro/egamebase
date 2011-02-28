@@ -1,5 +1,8 @@
 package diablo.douban.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -9,25 +12,35 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import diablo.douban.LoginActivity;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
+import diablo.douban.accessor.pojo.DoubanBroadcast;
+import diablo.douban.accessor.pojo.DoubanUser;
+import diablo.douban.accessor.pojo.Doumail;
 import diablo.douban.broadcast.SayingActivity;
+import diablo.douban.broadcast.SayingAdapter;
+import diablo.douban.doumail.DoumailAdapter;
 import diablo.douban.relationship.ContactsActivity;
+import diablo.douban.relationship.DoubanUserAdapter;
 
-public abstract class AbstractProgressListActivity extends ListActivity {
+public class HomepageActivity extends ListActivity {
+	public static final int SIZE_PER_PAGE = 20;
 	public static final int PROGRESS_DIALOG = 0;
 	protected Activity activity;
 	ProgressThread progressThread;
@@ -35,9 +48,106 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 	SharedPreferences.Editor editor;
 	View headView;
 
-	protected abstract void onProgressLoadData();
+	private TextView paginatorTitle;
+	private Button prePage, nextPage;
+	private int start = 1, length = SIZE_PER_PAGE;
+	
+	private ListAdapter adapter;
+	
+	private int type = 0;
+	
+	private String paginatorTitleText;
+	
+	private void resetPage(){
+		start = 1;
+		length = SIZE_PER_PAGE;
+	}
+	
+	private boolean inbox = true;
+	
+	private static DoubanAccessor douban = DoubanAccessor.getInstance();
+	protected void onProgressLoadData(){
+		douban.totalResults = "0";
+		List<String> iconList = new ArrayList<String>();
+		switch (type) {
+		case 0: // home page
+			List<DoubanBroadcast> list = douban.getBroadcast("broadcast", DoubanAuthData.getCurrent().getUserid(), start, length);			
+			
+			for(DoubanBroadcast b : list){
+				if(b.getUser()!=null && iconList.contains(b.getUser().getIcon())){
+					iconList.add(b.getUser().getIcon());				
+				}
+			}
+			LoaderImageView.loadDatasIntoMap(iconList);
+			paginatorTitleText = "友邻广播";
+			adapter =  new SayingAdapter(activity, list);
+			break;
+		case 1:	// friend	
+			List<DoubanUser> friendList = douban.getPeopleFriends(null, start, length);
+			for(DoubanUser b : friendList){
+				if(b.getIcon()!=null){
+					LoaderImageView.loadDataIntoMap(b.getIcon());
+				}
+			}
+			paginatorTitleText = "我关注的人";
+			adapter =  new DoubanUserAdapter(activity, friendList);	
+			break;
+		case 2:	// movie			
+			break;
+		case 3:	// book			
+			break;
+		case 4:	// music			
+			break;
+		case 5:	// doumail
+			List<Doumail> doumailList = null;			
+			if(inbox){
+				paginatorTitleText = "收件箱";
+				doumailList = douban.getDoumailList("INBOX", false, start, length);
+			}else{
+				paginatorTitleText = "发件箱";
+				doumailList = douban.getDoumailList("OUTBOX", false, start, length);
+			}
+			
+			for(Doumail b : doumailList){
+				if(b.getFrom()!=null && iconList.contains(b.getFrom().getIcon())){
+					iconList.add(b.getFrom().getIcon());				
+				}
+			}
+			LoaderImageView.loadDatasIntoMap(iconList);
+			
+			adapter =  new DoumailAdapter(activity, doumailList, inbox);	
+			break;
+		case 6:	// search			
+			break;
+		}
+	}
 
-	protected abstract void onProgressComplete();
+	protected void onProgressComplete(){
+		setListAdapter(adapter);		
+		
+		if(start == 1){
+			prePage.setEnabled(false);
+		}else{
+			prePage.setEnabled(true);
+		}
+		
+		int end = 0, totalResult = Integer.parseInt(DoubanAccessor.getInstance().totalResults);
+		end = start + length;
+		if(totalResult != 0){			
+			end = end > totalResult ? totalResult : end;
+			paginatorTitleText += "(" + start + "-" + end + ", 共" + totalResult + "条记录)"; 
+		}else{
+			
+			paginatorTitleText += "(" + (adapter.getCount() == 0 ? 0 :start) + "-" + end + ")"; 
+		}
+		
+		if(end == totalResult){
+			nextPage.setEnabled(false);
+		}else{
+			nextPage.setEnabled(true);
+		}
+		paginatorTitle.setText(paginatorTitleText);
+	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,24 +185,37 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 				 * R.drawable.m_movie, R.drawable.m_book, R.drawable.m_music,
 				 * R.drawable.m_doumail, R.drawable.m_search,
 				 */
-				switch (position) {
-				case 0: // home page
-					break;
-				case 1:	// friend			
-					break;
-				case 2:	// movie			
-					break;
-				case 3:	// book			
-					break;
-				case 4:	// music			
-					break;
-				case 5:	// doumail			
-					break;
-				case 6:	// search			
-					break;
-				}
+				type = position;
+				resetPage();
+				showDialog(PROGRESS_DIALOG);
+				
 			}
 		});
+		
+		
+		View view = LayoutInflater.from(this).inflate(R.layout.header_paginator, null);
+		paginatorTitle = ((TextView)view.findViewById(R.id.paginatorTitle));
+		paginatorTitle.setText(R.string.broadcast);		
+		
+		prePage = (Button)view.findViewById(R.id.prePage);
+		prePage.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				start -= length; 	
+				start = start < 1 ? 1 : start;
+				showDialog(PROGRESS_DIALOG);
+			}
+		});
+		
+		nextPage = (Button)view.findViewById(R.id.nextPage);
+		nextPage.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				start += length;
+				
+				showDialog(PROGRESS_DIALOG);
+			}
+		});
+		getListView().addFooterView(view);
+		showDialog(PROGRESS_DIALOG);
 	}
 
 	@Override

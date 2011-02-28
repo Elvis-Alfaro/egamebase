@@ -3,25 +3,21 @@ package diablo.douban.broadcast;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.GradientDrawable.Orientation;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.common.AbstractProgressListActivity;
-import diablo.douban.common.HeadViewInflateHelper;
 import diablo.douban.common.LoaderImageView;
 
 public class SayingActivity extends AbstractProgressListActivity{	
@@ -29,6 +25,23 @@ public class SayingActivity extends AbstractProgressListActivity{
 	private TextView paginatorTitle;
 	private Button prePage, nextPage;
 	private int start = 1, length = 20;
+	
+	private static Activity context;
+	public static View getHeadView(){
+		View view = LayoutInflater.from(context).inflate(R.layout.saying_form, null);
+		final EditText content = (EditText)view.findViewById(R.id.sayingContent);
+		
+		Button submit = (Button)view.findViewById(R.id.iSay);	
+		
+		submit.setOnClickListener(new OnClickListener(){
+			public void onClick(View v){
+				DoubanAccessor.getInstance().postSaying(content.getText().toString());
+				content.setText("");
+				context.showDialog(PROGRESS_DIALOG);
+			}
+		});
+		return view;
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
