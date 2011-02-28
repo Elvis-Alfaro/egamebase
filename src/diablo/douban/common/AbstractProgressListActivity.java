@@ -49,16 +49,16 @@ public abstract class AbstractProgressListActivity extends ListActivity{
 		editor = sp.edit();		
 		
 		final Gallery g = (Gallery) findViewById(R.id.gallery);
-		final ImageAdapter adapter = new ImageAdapter(this);
+		final HeadMenuAdapter adapter = new HeadMenuAdapter(this);
 	    g.setAdapter(adapter);
 	    g.setSelection(Integer.MAX_VALUE/2);
 	    
 	    g.setOnItemClickListener(new OnItemClickListener() {
 	        public void onItemClick(AdapterView parent, View v, int position, long id) {
-	        	if (position >= ImageAdapter.mImageIds.length) {
-	                position = position % ImageAdapter.mImageIds.length;
+	        	if (position >= HeadMenuAdapter.mImageIds.length) {
+	                position = position % HeadMenuAdapter.mImageIds.length;
 	            }
-	        	ImageAdapter.currentSelection = position;
+	        	HeadMenuAdapter.currentSelection = position;
 	        	adapter.notifyDataSetChanged();
 	        	//((ImageView)v).setImageResource(ImageAdapter.mImageIds[position]);
 	            Toast.makeText(AbstractProgressListActivity.this, "" + position, Toast.LENGTH_SHORT).show();

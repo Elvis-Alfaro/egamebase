@@ -60,7 +60,7 @@ public class DoubanDiablo extends Activity {
 //			mail.setTo(me);
 //			mail.setFrom(me);
 //			intent.putExtra(ComposeDoumailActivity.DOUMAIL, mail);
-			Intent intent = new Intent(this, SearchActivity.class);
+			Intent intent = new Intent(this, SayingActivity.class);
 			
 			startActivity(intent);
 		} else {

@@ -9,7 +9,7 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 import diablo.douban.R;
 
-public class ImageAdapter extends BaseAdapter {
+public class HeadMenuAdapter extends BaseAdapter {
     int mGalleryItemBackground;
     private Context mContext;
 
@@ -33,7 +33,7 @@ public class ImageAdapter extends BaseAdapter {
         R.drawable.book_disabled,
     };
 
-    public ImageAdapter(Context c) {
+    public HeadMenuAdapter(Context c) {
         mContext = c;       
         TypedArray a = c.obtainStyledAttributes(R.styleable.HelloGallery);
         mGalleryItemBackground = a.getResourceId(
@@ -77,7 +77,7 @@ public class ImageAdapter extends BaseAdapter {
         }else{
         	i.setImageResource(mImageIdsDisabled[position]);
         }
-        i.setLayoutParams(new Gallery.LayoutParams(80, 80));
+        i.setLayoutParams(new Gallery.LayoutParams(40, 40));
         i.setScaleType(ImageView.ScaleType.FIT_XY);
         //i.setBackgroundResource(mGalleryItemBackground);
         return i;
