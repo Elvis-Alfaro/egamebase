@@ -22,9 +22,9 @@
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
-			android:paddingLeft="5dip"
-			
-			android:paddingRight="5dip"		
+			android:paddingLeft="5dip"			
+			android:paddingRight="5dip"	
+			android:background="@drawable/shape2"	
 			>
 			
 			<RelativeLayout
@@ -37,13 +37,14 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" 
 					android:textColor="@color/link_color"
-					android:background="@drawable/android_linkbtn"
+					android:background="#00000000"
 					android:textSize="13px" /> 
 			
 				<TextView android:id="@+id/saying_time" 
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" 
 					android:textColor="#FFCCCCCC"
+					android:textSize="10px" 
 					android:layout_alignParentRight="true"
 					/>				
 			</RelativeLayout>		
@@ -53,8 +54,10 @@
 				android:paddingLeft="10dip">
 				<TextView android:id="@+id/saying_detail" 
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"						
-					android:textSize="12px" />
+					android:layout_height="wrap_content"
+					android:textColor="#EEE"					
+					android:textColorLink="@color/link_color" 
+					android:textSize="14px" />
 			</LinearLayout>
 			
 			<RelativeLayout 
@@ -65,16 +68,18 @@
 				android:paddingBottom="10dip">
 				<TextView android:id="@+id/saying_reply" 
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content" 
-					android:textColor="#FF666666"
+					android:layout_height="wrap_content" 	
+					android:textSize="12px"
+					android:textColor="#EEE"				
 					/>				
 				<Button android:id="@+id/saying_reply_btn" 
 					android:layout_width="wrap_content"
 					android:text="@string/reply"					
-					android:background="@drawable/android_btn"
+					android:background="@drawable/orange_btn"
 					android:layout_height="wrap_content" 
-					android:textColor="#FF888888"
-					android:textSize="13px" 
+					android:textColor="#FFF"
+					android:textSize="10px"		
+					android:textStyle="bold"			
 					android:layout_alignParentRight="true"
 					android:layout_below="@id/saying_reply"
 					/>
