@@ -5,4 +5,8 @@
 		
 		<item name="@android:listDivider">@android:color/white</item>
 	</style>
+	
+	<style name="MyTheme" parent="android:Theme">
+		<item name="android:background">@drawable/shape</item>
+	</style>
 </resources>
