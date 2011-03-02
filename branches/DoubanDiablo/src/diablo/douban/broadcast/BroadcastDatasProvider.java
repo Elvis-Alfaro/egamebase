@@ -33,7 +33,7 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 		//Log.i("DoubanDiablo", "in BroadcastDatasProvider: " + (listener == null));
 	}
 	
-	@Override
+	
 	public ListAdapter getDatas(int start, int length) {
 		List<DoubanBroadcast> list = douban.getBroadcast("broadcast", DoubanAuthData.getCurrent().getUserid(), start, length);			
 		
@@ -68,7 +68,7 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
         (non-Javadoc)
 	 * @see diablo.douban.common.IDoubanDataProvider#getFootView()
 	 */
-	@Override
+	
 	public View getFootView() {
 		
 		RelativeLayout view = new RelativeLayout(activity);
@@ -108,13 +108,13 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 		return view;
 	}
 
-	@Override
+	
 	public View getHeaderView() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public String getPaginatorText() {
 		return "ÓÑÁÚ¹ã²¥";
 	}
