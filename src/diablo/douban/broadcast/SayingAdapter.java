@@ -4,21 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Looper;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-
 import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
@@ -51,7 +47,7 @@ public class SayingAdapter  extends BaseAdapter {
 		return 0;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {		
+	public View getView(int position, View convertView, ViewGroup parent) {				
 		ViewHolder holder = null;
 		if (convertView == null) {
 

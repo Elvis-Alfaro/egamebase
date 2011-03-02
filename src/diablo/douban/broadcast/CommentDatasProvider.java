@@ -29,7 +29,7 @@ public class CommentDatasProvider implements IDoubanDataProvider {
 		this.curBd = curBd;
 	}
 	
-	@Override
+	
 	public ListAdapter getDatas(int start, int length) {
 		List<Map<String, Object>> dat = new ArrayList<Map<String, Object>>();
 		if(curBd.getCategory().equals("recommendation")){
@@ -59,19 +59,19 @@ public class CommentDatasProvider implements IDoubanDataProvider {
 						R.id.content });
 	}
 
-	@Override
+	
 	public View getFootView() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public View getHeaderView() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public String getPaginatorText() {
 		// TODO Auto-generated method stub
 		return "¹ã²¥»Ø¸´";

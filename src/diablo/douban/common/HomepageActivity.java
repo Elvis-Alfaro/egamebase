@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,14 +37,12 @@ import diablo.douban.LoginActivity;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
-import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.broadcast.BroadcastDatasProvider;
-import diablo.douban.broadcast.CommentDatasProvider;
 import diablo.douban.broadcast.SayingActivity;
-import diablo.douban.broadcast.SayingAdapter;
 import diablo.douban.doumail.DoumailDatasProvider;
 import diablo.douban.relationship.ContactDatasProvider;
 import diablo.douban.relationship.ContactsActivity;
+import diablo.douban.search.SearchDatasProvider;
 
 public class HomepageActivity extends ListActivity {
 	public static final int SIZE_PER_PAGE = 20;
@@ -64,7 +63,6 @@ public class HomepageActivity extends ListActivity {
 
 	private String paginatorTitleText;
 
-	
 	private List<String> iconList;
 	private static DoubanAccessor douban = DoubanAccessor.getInstance();
 	private IDoubanDataProvider dataProvider;
@@ -74,7 +72,7 @@ public class HomepageActivity extends ListActivity {
 	protected void onProgressLoadData() {
 		douban.totalResults = "0";
 		iconList = new ArrayList<String>();
-		
+
 		switch (type) {
 		case 0: // home page
 			dataProvider = new BroadcastDatasProvider(douban, this);
@@ -92,40 +90,45 @@ public class HomepageActivity extends ListActivity {
 			dataProvider = new DoumailDatasProvider(douban, this);
 			break;
 		case 6: // search
+			dataProvider = new SearchDatasProvider(douban, this, searchDialog);
 			break;
-		case 10:	// comments
+		case 10: // comments
 			break;
 		}
 		if (dataProvider != null) {
 			paginatorTitleText = dataProvider.getPaginatorText();
 			adapter = dataProvider.getDatas(start, length);
 
-			View headView = dataProvider.getHeaderView();
-			if (headView != null) {
-				this.extraHeadView = headView;
-				updateViewHandler.sendEmptyMessage(1);
-			} else {
-				updateViewHandler.sendEmptyMessage(-1);
-			}
+			this.extraHeadView = dataProvider.getHeaderView();
+			this.extraFootView = dataProvider.getFootView();
 
-			View footView = dataProvider.getFootView();
-			if (footView != null) {
-				this.extraFootView = footView;
-				updateViewHandler.sendEmptyMessage(2);
-			} else {
-				updateViewHandler.sendEmptyMessage(-2);
-			}
 		}
 	}
 
+	
 	private void resetPage() {
 		start = 1;
 		length = SIZE_PER_PAGE;
 	}
 
 	protected void onProgressComplete() {
-		setListAdapter(adapter);
+		setListAdapter(adapter); 
+		if (extraHeadView != null) {
+			ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+			addContentView(extraHeadView, lp);
+		} 
+		if (extraFootView != null) {
+			Log.i(TAG, "addContentView");
+			ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+			addContentView(extraFootView, lp);
 
+			ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) HomepageActivity.this
+					.getListView().getLayoutParams();
+			mlp.setMargins(0, 40, 0, 40);
+		}
+		
 		if (start == 1) {
 			prePage.setEnabled(false);
 		} else {
@@ -153,29 +156,34 @@ public class HomepageActivity extends ListActivity {
 		paginatorTitle.setText(paginatorTitleText);
 	}
 
-
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
-		
+
 		douban = DoubanAccessor.getInstance();
-		if(DoubanAuthData.getCurrent() != null){
-			reloadHeadView(DoubanAuthData.getCurrent());			
+		if (DoubanAuthData.getCurrent() != null) {
+			reloadHeadView(DoubanAuthData.getCurrent());
 		}
 		showDialog(0);
 	}
 	
+	AlertDialog.Builder builder;
+	AlertDialog alert;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.listview);
-		this.getListView().setBackgroundResource(DoubanDiablo.currentBgResourceId);
+		this.getListView().setBackgroundResource(
+				DoubanDiablo.currentBgResourceId);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
-		activity = this; 
+		activity = this;
 		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
 				.getCurrent().getUsername(), DoubanAuthData.getCurrent()
 				.getIcon());
 		this.getListView().addHeaderView(headView);
 
+		builder = new AlertDialog.Builder(this);
+		
 		SharedPreferences sp = getSharedPreferences("token",
 				MODE_WORLD_WRITEABLE);
 		editor = sp.edit();
@@ -191,17 +199,12 @@ public class HomepageActivity extends ListActivity {
 				if (position >= HeadMenuAdapter.mImageIds.length) {
 					position = position % HeadMenuAdapter.mImageIds.length;
 				}
-				if (extraHeadView != null) {
-					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
-				}			
-			
-				if (extraFootView != null) {
-					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
-				}
+
 				HeadMenuAdapter.currentSelection = position;
 				adapter.notifyDataSetChanged();
 				type = position;
 				resetPage();
+				removeExtraView();
 				showDialog(PROGRESS_DIALOG);
 
 			}
@@ -230,9 +233,9 @@ public class HomepageActivity extends ListActivity {
 			}
 		});
 		getListView().addFooterView(view);
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.glance_list_item,
-				new ArrayList<String>()));
-		//showDialog(PROGRESS_DIALOG);
+		setListAdapter(new ArrayAdapter<String>(this,
+				R.layout.glance_list_item, new ArrayList<String>()));
+		// showDialog(PROGRESS_DIALOG);
 	}
 
 	@Override
@@ -278,13 +281,17 @@ public class HomepageActivity extends ListActivity {
 				douban = DoubanAccessor.getInstance();
 				reloadHeadView(dat);
 				if (extraHeadView != null) {
-					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
-				}			
-			
-				if (extraFootView != null) {
-					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
+					((ViewGroup) extraHeadView.getParent())
+							.removeView(extraHeadView);
+					extraHeadView = null;
 				}
-				
+
+				if (extraFootView != null) {
+					((ViewGroup) extraFootView.getParent())
+							.removeView(extraFootView);
+					extraFootView = null;
+				}
+
 				showDialog(PROGRESS_DIALOG);
 				// startActivity(intent);
 				return true;
@@ -314,32 +321,20 @@ public class HomepageActivity extends ListActivity {
 	}
 
 	public static final String TAG = "DoubanDiablo";
-	final Handler updateViewHandler = new Handler() {
-		public void handleMessage(Message msg) {			
-			if (msg.what == 1) {
-				
-				ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-				addContentView(extraHeadView, lp);
-			} else if (msg.what == 2) {
-				
-				ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-				addContentView(extraFootView, lp);
-				
-				ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)HomepageActivity.this.getListView().getLayoutParams();
-				mlp.setMargins(0, 40, 0, 35);
-			} else if (msg.what == -1) {
-				if (extraHeadView != null) {
-					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
-				}
-			} else if (msg.what == -2) {
-				if (extraFootView != null) {
-					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
-				}
-			}
+
+	public void removeExtraView() {
+		if (extraHeadView != null) {
+			((ViewGroup) extraHeadView.getParent()).removeView(extraHeadView);
+			extraHeadView = null;
 		}
-	};
+
+		if (extraFootView != null) {
+			((ViewGroup) extraFootView.getParent()).removeView(extraFootView);
+			extraFootView = null;
+		}
+
+	}
+
 	final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			int total = msg.getData().getInt("total");
@@ -350,6 +345,25 @@ public class HomepageActivity extends ListActivity {
 
 				onProgressComplete();
 			}
+		}
+	};
+	
+	final Handler searchDialog = new Handler(){
+		public void handleMessage(Message msg) {
+			removeExtraView();
+			SearchDatasProvider.keyword = msg.getData().getString("keyword");
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+			builder.setTitle("ÇëÑ¡ÔñËÑË÷Àà±ð");
+			builder.setSingleChoiceItems(SearchDatasProvider.searchClassify, -1, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {		       
+			    	SearchDatasProvider.searchType = item;
+			    	dialog.dismiss();
+			    	activity.showDialog(0);		    	
+			        
+			    }
+			});
+			
+			builder.create().show();
 		}
 	};
 

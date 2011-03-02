@@ -23,7 +23,7 @@ public class ContactDatasProvider implements IDoubanDataProvider{
 		iconList = new ArrayList<String>();
 	}
 	
-	@Override
+	
 	public ListAdapter getDatas(int start, int length) {
 		List<DoubanUser> friendList = douban.getPeopleFriends(null, start, length);
 		for(DoubanUser b : friendList){
@@ -35,19 +35,19 @@ public class ContactDatasProvider implements IDoubanDataProvider{
 		return new DoubanUserAdapter(activity, friendList);	
 	}
 
-	@Override
+	
 	public View getFootView() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public View getHeaderView() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public String getPaginatorText() {
 		return "我关注的人";
 	}

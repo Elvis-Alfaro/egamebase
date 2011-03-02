@@ -28,7 +28,7 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 		iconList = new ArrayList<String>();
 	}
 
-	@Override
+	
 	public ListAdapter getDatas(int start, int length) {
 		List<Doumail> doumailList = null;
 		if (inbox) {
@@ -47,7 +47,7 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 		return new DoumailAdapter(activity, doumailList, inbox);
 	}
 
-	@Override
+	
 	public View getFootView() {
 		RelativeLayout view = new RelativeLayout(activity);
 		
@@ -65,7 +65,7 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 			btn1.setText("转到收件箱"); 
 		}
 		btn1.setOnClickListener(new OnClickListener() {			
-			@Override
+			
 			public void onClick(View v) {
 				inbox = !inbox;				
 				activity.showDialog(0);
@@ -77,13 +77,13 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 		return view;
 	}
 
-	@Override
+	
 	public View getHeaderView() {
 		
 		return null;
 	}
 
-	@Override
+	
 	public String getPaginatorText() {
 		return inbox ? "收件箱" : "发件箱";
 	}
