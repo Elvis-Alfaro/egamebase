@@ -20,17 +20,17 @@
 				android:gravity="right">
 				
 	    		<Button android:id="@+id/prePage" 				
-					android:text="@string/pre_page"
-					android:paddingRight="10dip"
-					android:textColor="#FF888888"						
-				    android:background="@drawable/android_linkbtn"
+					android:text="@string/pre_page"					
+					android:textColor="#FFFFFFFF"						
+				    android:background="@drawable/orange_btn"
+				    android:layout_marginRight="10px"
 					android:layout_height="wrap_content"
 	    			android:layout_width="wrap_content" /> 
 	    		<Button android:id="@+id/nextPage" 
-					android:textColor="#FF888888"				
-					android:background="@drawable/android_linkbtn"
-					android:text="@string/next_page"
-					android:paddingRight="10dip"
+					android:textColor="#FFFFFFFF"				
+					android:background="@drawable/orange_btn"
+					android:layout_marginRight="10px"
+					android:text="@string/next_page"					
 					android:layout_height="wrap_content"
 	    			android:layout_width="wrap_content" /> 
  			</LinearLayout>

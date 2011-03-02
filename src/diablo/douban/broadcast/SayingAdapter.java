@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.common.LoaderImageView;
@@ -27,12 +29,14 @@ public class SayingAdapter  extends BaseAdapter {
 	private List<DoubanBroadcast> mData;
 	private SimpleDateFormat format;
 	private Activity activity;
+	//private OnReplyClickListener listener;
 	
 	public SayingAdapter(Activity activity, List<DoubanBroadcast> mData) {
 		this.activity = activity;
 		this.mInflater = LayoutInflater.from(activity);
 		this.mData = mData;
-		format = new SimpleDateFormat("MM-dd HH:mm:ss");
+		format = new SimpleDateFormat("MM-dd HH:mm:ss");		
+		
 	}
 
 	public int getCount() {
@@ -55,7 +59,7 @@ public class SayingAdapter  extends BaseAdapter {
 
 			convertView = mInflater.inflate(
 					R.layout.saying_broadcast_item, null);
-
+			((LinearLayout)(convertView.findViewById(R.id.list_item))).setBackgroundResource(DoubanDiablo.currentListItemBgResourceId);
 			holder.userImg = (LoaderImageView) convertView
 					.findViewById(R.id.saying_thumbnail);
 			holder.user = (Button) convertView.findViewById(R.id.saying_user);
@@ -81,7 +85,7 @@ public class SayingAdapter  extends BaseAdapter {
 		String comment_count = bd.getMap().get("comments_count");
 		
 		String category = bd.getCategory();
-		Log.i("DoubanDiablo", "comment_count: " + comment_count + ", category: " + category);
+		//Log.i("DoubanDiablo", "comment_count: " + comment_count + ", category: " + category);
 		if(category!= null && category.equals("saying")){
 			title = "หตฃบ" + title;
 			holder.reply.setVisibility(View.VISIBLE);
@@ -130,20 +134,21 @@ public class SayingAdapter  extends BaseAdapter {
 		
 		holder.reply.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.i("DoubanDiablo", bd.getId());
+				//Log.i("DoubanDiablo", bd.getId());
 				Intent intent = new Intent(activity, CommentsActivity.class);
 				intent.putExtra("DATA", bd);
 				activity.startActivity(intent);
-				//LinearLayout l = (LinearLayout)v.getParent().getParent();
-				//l.addView(new EditText(activity));
-				
-				//ListView listView = new ListView(activity);
-			
-				//listView.addFooterView(new EditText(activity));
+				// if(listener != null){
+				// listener.onReply(bd);
+				// }
 			}
 		});
 
 		return convertView;
+	}
+	
+	public interface OnReplyClickListener{
+		public void onReply(DoubanBroadcast bd);
 	}
 
 	

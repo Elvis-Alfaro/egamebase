@@ -21,6 +21,8 @@ public class DoubanDiablo extends Activity {
 	public static DiabloDatabase database;
 	// public static DoubanUser me;
 	
+	public static int currentBgResourceId = R.drawable.shape;
+	public static int currentListItemBgResourceId = R.drawable.shape2;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

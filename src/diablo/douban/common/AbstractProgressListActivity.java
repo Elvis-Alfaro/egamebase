@@ -41,58 +41,21 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.listview);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		activity = this;
-		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
-				.getCurrent().getUsername(), DoubanAuthData.getCurrent()
-				.getIcon());
-		this.getListView().addHeaderView(headView);
+//		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
+//				.getCurrent().getUsername(), DoubanAuthData.getCurrent()
+//				.getIcon());
+//		this.getListView().addHeaderView(headView);
 
 		SharedPreferences sp = getSharedPreferences("token",
 				MODE_WORLD_WRITEABLE);
 		editor = sp.edit();
-
 		final Gallery g = (Gallery) findViewById(R.id.gallery);
-		final HeadMenuAdapter adapter = new HeadMenuAdapter(this);
-		g.setAdapter(adapter);
-		g.setSelection(Integer.MAX_VALUE / 2);
-
-		g.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView parent, View v, int position,
-					long id) {
-				if (position >= HeadMenuAdapter.mImageIds.length) {
-					position = position % HeadMenuAdapter.mImageIds.length;
-				}
-				HeadMenuAdapter.currentSelection = position;
-				adapter.notifyDataSetChanged();
-				// //((ImageView)v).setImageResource(ImageAdapter.mImageIds[position]);
-				// Toast.makeText(AbstractProgressListActivity.this, "" +
-				// position, Toast.LENGTH_SHORT).show();
-
-				/*
-				 * R.drawable.m_homepage, R.drawable.m_friend,
-				 * R.drawable.m_movie, R.drawable.m_book, R.drawable.m_music,
-				 * R.drawable.m_doumail, R.drawable.m_search,
-				 */
-				switch (position) {
-				case 0: // home page
-					break;
-				case 1:	// friend			
-					break;
-				case 2:	// movie			
-					break;
-				case 3:	// book			
-					break;
-				case 4:	// music			
-					break;
-				case 5:	// doumail			
-					break;
-				case 6:	// search			
-					break;
-				}
-			}
-		});
+		g.setVisibility(View.GONE);
+		(findViewById(R.id.header)).setVisibility(View.GONE);
 	}
 
 	@Override
@@ -115,14 +78,6 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 		return true;
 	}
 
-	private void reloadHeadView(DoubanAuthData cur) {
-		LoaderImageView img = (LoaderImageView) headView
-				.findViewById(R.id.thumbnailMe);
-		img.setImageDrawable(cur.getIcon());
-		TextView welcome = (TextView) headView.findViewById(R.id.welcome);
-		welcome.setText("»¶Ó­Äã£¬" + cur.getUsername());
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -135,7 +90,6 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 				// DoubanDiablo.curAuthDat = dat;
 				DoubanAuthData.setCurrent(dat);
 				DoubanAccessor.init(dat.getToken(), dat.getSecret());
-				reloadHeadView(dat);
 
 				showDialog(PROGRESS_DIALOG);
 				// startActivity(intent);

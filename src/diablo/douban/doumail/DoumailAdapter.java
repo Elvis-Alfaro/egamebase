@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanUser;
@@ -63,7 +65,8 @@ public class DoumailAdapter extends BaseAdapter {
 
 			convertView = mInflater.inflate(
 					R.layout.doumail_listitem, null);
-
+			((LinearLayout)(convertView.findViewById(R.id.list_item))).setBackgroundResource(DoubanDiablo.currentListItemBgResourceId);
+			
 			holder.userImg = (LoaderImageView) convertView
 					.findViewById(R.id.saying_thumbnail);
 			holder.user = (Button) convertView.findViewById(R.id.user);
