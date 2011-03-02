@@ -12,32 +12,38 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import diablo.douban.DoubanDiablo;
 import diablo.douban.LoginActivity;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
-import diablo.douban.accessor.pojo.DoubanUser;
-import diablo.douban.accessor.pojo.Doumail;
+import diablo.douban.broadcast.BroadcastDatasProvider;
+import diablo.douban.broadcast.CommentDatasProvider;
 import diablo.douban.broadcast.SayingActivity;
 import diablo.douban.broadcast.SayingAdapter;
-import diablo.douban.doumail.DoumailAdapter;
+import diablo.douban.doumail.DoumailDatasProvider;
+import diablo.douban.relationship.ContactDatasProvider;
 import diablo.douban.relationship.ContactsActivity;
-import diablo.douban.relationship.DoubanUserAdapter;
 
 public class HomepageActivity extends ListActivity {
 	public static final int SIZE_PER_PAGE = 20;
@@ -51,110 +57,120 @@ public class HomepageActivity extends ListActivity {
 	private TextView paginatorTitle;
 	private Button prePage, nextPage;
 	private int start = 1, length = SIZE_PER_PAGE;
-	
+
 	private ListAdapter adapter;
-	
+
 	private int type = 0;
-	
+
 	private String paginatorTitleText;
+
 	
-	private void resetPage(){
-		start = 1;
-		length = SIZE_PER_PAGE;
-	}
-	
-	private boolean inbox = true;
-	
+	private List<String> iconList;
 	private static DoubanAccessor douban = DoubanAccessor.getInstance();
-	protected void onProgressLoadData(){
+	private IDoubanDataProvider dataProvider;
+
+	private View extraHeadView, extraFootView;
+
+	protected void onProgressLoadData() {
 		douban.totalResults = "0";
-		List<String> iconList = new ArrayList<String>();
+		iconList = new ArrayList<String>();
+		
 		switch (type) {
 		case 0: // home page
-			List<DoubanBroadcast> list = douban.getBroadcast("broadcast", DoubanAuthData.getCurrent().getUserid(), start, length);			
-			
-			for(DoubanBroadcast b : list){
-				if(b.getUser()!=null && iconList.contains(b.getUser().getIcon())){
-					iconList.add(b.getUser().getIcon());				
-				}
+			dataProvider = new BroadcastDatasProvider(douban, this);
+			break;
+		case 1: // friend
+			dataProvider = new ContactDatasProvider(douban, this);
+			break;
+		case 2: // movie
+			break;
+		case 3: // book
+			break;
+		case 4: // music
+			break;
+		case 5: // doumail
+			dataProvider = new DoumailDatasProvider(douban, this);
+			break;
+		case 6: // search
+			break;
+		case 10:	// comments
+			break;
+		}
+		if (dataProvider != null) {
+			paginatorTitleText = dataProvider.getPaginatorText();
+			adapter = dataProvider.getDatas(start, length);
+
+			View headView = dataProvider.getHeaderView();
+			if (headView != null) {
+				this.extraHeadView = headView;
+				updateViewHandler.sendEmptyMessage(1);
+			} else {
+				updateViewHandler.sendEmptyMessage(-1);
 			}
-			LoaderImageView.loadDatasIntoMap(iconList);
-			paginatorTitleText = "友邻广播";
-			adapter =  new SayingAdapter(activity, list);
-			break;
-		case 1:	// friend	
-			List<DoubanUser> friendList = douban.getPeopleFriends(null, start, length);
-			for(DoubanUser b : friendList){
-				if(b.getIcon()!=null){
-					LoaderImageView.loadDataIntoMap(b.getIcon());
-				}
+
+			View footView = dataProvider.getFootView();
+			if (footView != null) {
+				this.extraFootView = footView;
+				updateViewHandler.sendEmptyMessage(2);
+			} else {
+				updateViewHandler.sendEmptyMessage(-2);
 			}
-			paginatorTitleText = "我关注的人";
-			adapter =  new DoubanUserAdapter(activity, friendList);	
-			break;
-		case 2:	// movie			
-			break;
-		case 3:	// book			
-			break;
-		case 4:	// music			
-			break;
-		case 5:	// doumail
-			List<Doumail> doumailList = null;			
-			if(inbox){
-				paginatorTitleText = "收件箱";
-				doumailList = douban.getDoumailList("INBOX", false, start, length);
-			}else{
-				paginatorTitleText = "发件箱";
-				doumailList = douban.getDoumailList("OUTBOX", false, start, length);
-			}
-			
-			for(Doumail b : doumailList){
-				if(b.getFrom()!=null && iconList.contains(b.getFrom().getIcon())){
-					iconList.add(b.getFrom().getIcon());				
-				}
-			}
-			LoaderImageView.loadDatasIntoMap(iconList);
-			
-			adapter =  new DoumailAdapter(activity, doumailList, inbox);	
-			break;
-		case 6:	// search			
-			break;
 		}
 	}
 
-	protected void onProgressComplete(){
-		setListAdapter(adapter);		
-		
-		if(start == 1){
+	private void resetPage() {
+		start = 1;
+		length = SIZE_PER_PAGE;
+	}
+
+	protected void onProgressComplete() {
+		setListAdapter(adapter);
+
+		if (start == 1) {
 			prePage.setEnabled(false);
-		}else{
+		} else {
 			prePage.setEnabled(true);
 		}
-		
-		int end = 0, totalResult = Integer.parseInt(DoubanAccessor.getInstance().totalResults);
+
+		int end = 0, totalResult = Integer.parseInt(DoubanAccessor
+				.getInstance().totalResults);
 		end = start + length;
-		if(totalResult != 0){			
+		if (totalResult != 0) {
 			end = end > totalResult ? totalResult : end;
-			paginatorTitleText += "(" + start + "-" + end + ", 共" + totalResult + "条记录)"; 
-		}else{
-			
-			paginatorTitleText += "(" + (adapter.getCount() == 0 ? 0 :start) + "-" + end + ")"; 
+			paginatorTitleText += "(" + start + "-" + end + ", 共" + totalResult
+					+ "条记录)";
+		} else {
+
+			paginatorTitleText += "(" + (adapter.getCount() == 0 ? 0 : start)
+					+ "-" + end + ")";
 		}
-		
-		if(end == totalResult){
+
+		if (end == totalResult) {
 			nextPage.setEnabled(false);
-		}else{
+		} else {
 			nextPage.setEnabled(true);
 		}
 		paginatorTitle.setText(paginatorTitleText);
 	}
 
+
+	public void onResume(){
+		super.onResume();
+		
+		douban = DoubanAccessor.getInstance();
+		if(DoubanAuthData.getCurrent() != null){
+			reloadHeadView(DoubanAuthData.getCurrent());			
+		}
+		showDialog(0);
+	}
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.listview);
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
-		activity = this;
+		this.getListView().setBackgroundResource(DoubanDiablo.currentBgResourceId);
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
+		activity = this; 
 		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
 				.getCurrent().getUsername(), DoubanAuthData.getCurrent()
 				.getIcon());
@@ -175,48 +191,48 @@ public class HomepageActivity extends ListActivity {
 				if (position >= HeadMenuAdapter.mImageIds.length) {
 					position = position % HeadMenuAdapter.mImageIds.length;
 				}
+				if (extraHeadView != null) {
+					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
+				}			
+			
+				if (extraFootView != null) {
+					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
+				}
 				HeadMenuAdapter.currentSelection = position;
 				adapter.notifyDataSetChanged();
-				// //((ImageView)v).setImageResource(ImageAdapter.mImageIds[position]);
-				// Toast.makeText(AbstractProgressListActivity.this, "" +
-				// position, Toast.LENGTH_SHORT).show();
-
-				/*
-				 * R.drawable.m_homepage, R.drawable.m_friend,
-				 * R.drawable.m_movie, R.drawable.m_book, R.drawable.m_music,
-				 * R.drawable.m_doumail, R.drawable.m_search,
-				 */
 				type = position;
 				resetPage();
 				showDialog(PROGRESS_DIALOG);
-				
+
 			}
 		});
-		
-		
-		View view = LayoutInflater.from(this).inflate(R.layout.header_paginator, null);
-		paginatorTitle = ((TextView)view.findViewById(R.id.paginatorTitle));
-		paginatorTitle.setText(R.string.broadcast);		
-		
-		prePage = (Button)view.findViewById(R.id.prePage);
-		prePage.setOnClickListener(new OnClickListener(){
+
+		View view = LayoutInflater.from(this).inflate(
+				R.layout.header_paginator, null);
+		paginatorTitle = ((TextView) view.findViewById(R.id.paginatorTitle));
+		paginatorTitle.setText(R.string.broadcast);
+
+		prePage = (Button) view.findViewById(R.id.prePage);
+		prePage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				start -= length; 	
+				start -= length;
 				start = start < 1 ? 1 : start;
 				showDialog(PROGRESS_DIALOG);
 			}
 		});
-		
-		nextPage = (Button)view.findViewById(R.id.nextPage);
-		nextPage.setOnClickListener(new OnClickListener(){
+
+		nextPage = (Button) view.findViewById(R.id.nextPage);
+		nextPage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				start += length;
-				
+
 				showDialog(PROGRESS_DIALOG);
 			}
 		});
 		getListView().addFooterView(view);
-		showDialog(PROGRESS_DIALOG);
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.glance_list_item,
+				new ArrayList<String>()));
+		//showDialog(PROGRESS_DIALOG);
 	}
 
 	@Override
@@ -259,8 +275,16 @@ public class HomepageActivity extends ListActivity {
 				// DoubanDiablo.curAuthDat = dat;
 				DoubanAuthData.setCurrent(dat);
 				DoubanAccessor.init(dat.getToken(), dat.getSecret());
+				douban = DoubanAccessor.getInstance();
 				reloadHeadView(dat);
-
+				if (extraHeadView != null) {
+					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
+				}			
+			
+				if (extraFootView != null) {
+					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
+				}
+				
 				showDialog(PROGRESS_DIALOG);
 				// startActivity(intent);
 				return true;
@@ -289,6 +313,33 @@ public class HomepageActivity extends ListActivity {
 		}
 	}
 
+	public static final String TAG = "DoubanDiablo";
+	final Handler updateViewHandler = new Handler() {
+		public void handleMessage(Message msg) {			
+			if (msg.what == 1) {
+				
+				ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+				addContentView(extraHeadView, lp);
+			} else if (msg.what == 2) {
+				
+				ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+						LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+				addContentView(extraFootView, lp);
+				
+				ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)HomepageActivity.this.getListView().getLayoutParams();
+				mlp.setMargins(0, 40, 0, 35);
+			} else if (msg.what == -1) {
+				if (extraHeadView != null) {
+					((ViewGroup)extraHeadView.getParent()).removeView(extraHeadView);
+				}
+			} else if (msg.what == -2) {
+				if (extraFootView != null) {
+					((ViewGroup)extraFootView.getParent()).removeView(extraFootView);
+				}
+			}
+		}
+	};
 	final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			int total = msg.getData().getInt("total");

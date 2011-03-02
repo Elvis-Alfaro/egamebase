@@ -41,7 +41,6 @@ public class DoubanUserAdapter extends BaseAdapter {
 	}
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		ViewHolder holder = null;
 		if (convertView == null) {
 

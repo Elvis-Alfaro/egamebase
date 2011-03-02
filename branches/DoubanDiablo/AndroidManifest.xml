@@ -31,7 +31,8 @@
 			 android:label="@string/broadcast">
 		</activity>
 		<activity android:name=".broadcast.CommentsActivity"
-			 android:label="@string/comments">
+			 android:label="@string/comments"
+			 android:theme="@android:style/Theme.Dialog">
 		</activity>
 		<activity android:name=".doumail.ComposeDoumailActivity"
 			android:theme="@android:style/Theme.Dialog" android:label="@string/send_doumail">
