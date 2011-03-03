@@ -16,21 +16,28 @@ public class HeadMenuAdapter extends BaseAdapter {
     public static Integer[] mImageIds = {
     		R.drawable.m_homepage,                        
             R.drawable.m_friend,
+            R.drawable.m_note,
             R.drawable.m_movie,
             R.drawable.m_book,            
             R.drawable.m_music,
-            R.drawable.m_doumail,
+            R.drawable.m_activity,
             R.drawable.m_search,
+            R.drawable.m_doumail,
+            
+           
     };
     public static int currentSelection = 0;
     public static Integer[] mImageIdsDisabled = {    	
     	R.drawable.m_homepage_disabled,                        
         R.drawable.m_friend_disabled,
+        R.drawable.m_note_disabled,
         R.drawable.m_movie_disabled,
         R.drawable.m_book_disabled,        
         R.drawable.m_music_disabled,
-        R.drawable.m_doumail_disabled,
-        R.drawable.m_search_disabled,
+        R.drawable.m_activity_disabled,
+        R.drawable.m_search_disabled,   
+        R.drawable.m_doumail_disabled,        
+        
     };
 
     public HeadMenuAdapter(Context c) {

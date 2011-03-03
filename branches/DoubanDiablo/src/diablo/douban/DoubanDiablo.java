@@ -60,6 +60,7 @@ public class DoubanDiablo extends Activity {
 			Intent intent = new Intent(this, HomepageActivity.class);
 			
 			startActivity(intent);
+			finish();
 		} else {
 			Intent intent = new Intent(this, LoginActivity.class);
 			startActivity(intent);

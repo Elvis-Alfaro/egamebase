@@ -16,7 +16,7 @@ public class ContactDatasProvider implements IDoubanDataProvider{
 	private List<String> iconList;
 	private DoubanAccessor douban;
 	private Activity activity;
-	
+	private int length = 15;
 	public ContactDatasProvider(DoubanAccessor douban, Activity activity) {
 		this.douban = douban;
 		this.activity = activity;
@@ -24,7 +24,7 @@ public class ContactDatasProvider implements IDoubanDataProvider{
 	}
 	
 	
-	public ListAdapter getDatas(int start, int length) {
+	public ListAdapter getDatas(int start) {
 		List<DoubanUser> friendList = douban.getPeopleFriends(null, start, length);
 		for(DoubanUser b : friendList){
 			if(b.getIcon()!=null){

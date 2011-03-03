@@ -7,7 +7,7 @@ public interface IDoubanDataProvider {
 	
 	public String getPaginatorText();
 	
-	public ListAdapter getDatas(int start, int length);
+	public ListAdapter getDatas(int start);
 	
 	public View getHeaderView();
 	

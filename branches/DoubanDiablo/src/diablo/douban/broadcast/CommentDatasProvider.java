@@ -22,6 +22,8 @@ public class CommentDatasProvider implements IDoubanDataProvider {
 	private ListActivity activity;
 	private DoubanBroadcast curBd;
 	
+	private int length = 15;
+	
 	public CommentDatasProvider(DoubanAccessor douban, ListActivity activity, DoubanBroadcast curBd) {
 		this.douban = douban;
 		this.activity = activity;
@@ -30,7 +32,7 @@ public class CommentDatasProvider implements IDoubanDataProvider {
 	}
 	
 	
-	public ListAdapter getDatas(int start, int length) {
+	public ListAdapter getDatas(int start) {
 		List<Map<String, Object>> dat = new ArrayList<Map<String, Object>>();
 		if(curBd.getCategory().equals("recommendation")){
 			List<DoubanBroadcast> rlist = DoubanAccessor.getInstance().getBroadcast("RECOMMENDATION", curBd.getUser().getId(), 1, 10);

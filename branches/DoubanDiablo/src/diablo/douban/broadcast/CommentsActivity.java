@@ -147,7 +147,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 	@Override
 	protected void onProgressLoadData() {
 		
-		if(curBd.getCategory().equals("recommendation")){
+		if(curBd != null && curBd.getCategory() != null && curBd.getCategory().equals("recommendation")){
 			List<DoubanBroadcast> rlist = DoubanAccessor.getInstance().getBroadcast("RECOMMENDATION", curBd.getUser().getId(), 1, 10);
 			curBd = DoubanAccessor.getInstance().getRecommendation(curBd, rlist);			
 			if(curBd == null){				
@@ -155,7 +155,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 						"没找到对应推荐的评论！这个不能怪大菠萝！要怪就怪豆瓣API的设计人员！！" +
 						"原因是API里同一条“广播”和对应的“推荐”的ID竟然是不同的！！" +
 						"害你们增加了流量，我增加了代码量，而且还可能会出现这种找不到评论的错误！", 1).show();				
-			}
+			} 
 		}
 		
 		if(curBd != null){

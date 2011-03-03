@@ -2,7 +2,9 @@ package diablo.douban.relationship;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +12,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-
 import diablo.douban.R;
+import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanUser;
+import diablo.douban.accessor.pojo.Doumail;
 import diablo.douban.common.LoaderImageView;
+import diablo.douban.doumail.ComposeDoumailActivity;
 
 public class DoubanUserAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private List<DoubanUser> mData;
-
-	public DoubanUserAdapter(Context context, List<DoubanUser> mData) {
-		this.mInflater = LayoutInflater.from(context);
+	private Activity activity;
+	public DoubanUserAdapter(Activity activity, List<DoubanUser> mData) {
+		this.activity = activity;
+		this.mInflater = LayoutInflater.from(activity);
 		this.mData = mData;
 	}
 
@@ -59,7 +63,7 @@ public class DoubanUserAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		DoubanUser user = mData.get(position);
+		final DoubanUser user = mData.get(position);
 		holder.img.setImageDrawable(user.getIcon());
 		holder.title.setText(user.getTitle());
 		if(user.getLocation() != null){
@@ -75,7 +79,13 @@ public class DoubanUserAdapter extends BaseAdapter {
 		
 		holder.doumailBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showInfo(position);
+				Intent intent = new Intent(activity, ComposeDoumailActivity.class);
+				
+				Doumail mail = new Doumail();
+				mail.setFrom(DoubanAccessor.getInstance().getMe());
+				mail.setTo(user);
+				intent.putExtra(ComposeDoumailActivity.DOUMAIL, mail);
+				activity.startActivity(intent);
 			}
 		});
 

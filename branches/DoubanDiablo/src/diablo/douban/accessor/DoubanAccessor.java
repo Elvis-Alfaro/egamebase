@@ -42,6 +42,7 @@ import android.util.Log;
 import diablo.douban.DoubanDiablo;
 import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
+import diablo.douban.accessor.pojo.DoubanNote;
 import diablo.douban.accessor.pojo.DoubanUser;
 import diablo.douban.accessor.pojo.Doumail;
 
@@ -131,7 +132,7 @@ public class DoubanAccessor {
 			accessToken = accessor.accessToken;
 			tokenSecret = accessor.tokenSecret;
 			if (accessToken != null && tokenSecret != null) {
-				Log.i("OAUTH", accessToken + " : " + tokenSecret);
+				//Log.i("OAUTH", accessToken + " : " + tokenSecret);
 
 				SharedPreferences.Editor editor = pref.edit();
 				editor.putString("accessToken", accessToken);
@@ -146,7 +147,7 @@ public class DoubanAccessor {
 		} catch (OAuthException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
-			Log.i("DoubanDiablo", "URISyntaxException");
+			//Log.i("DoubanDiablo", "URISyntaxException");
 		}
 		return false;
 	}
@@ -157,7 +158,7 @@ public class DoubanAccessor {
 			accessToken = accessor.accessToken;
 			tokenSecret = accessor.tokenSecret;
 			if (accessToken != null && tokenSecret != null) {
-				Log.i("OAUTH", accessToken + " : " + tokenSecret);
+				//Log.i("OAUTH", accessToken + " : " + tokenSecret);
 				me = getPeople(null);
 
 				DiabloDatabase db = DoubanDiablo.database;
@@ -176,12 +177,13 @@ public class DoubanAccessor {
 		} catch (OAuthException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
-			Log.i("DoubanDiablo", "URISyntaxException");
+			//Log.i("DoubanDiablo", "URISyntaxException");
 		}
 		return false;
 	}
 
 	public static void init(String accessToken, String tokenSecret) {
+		Log.i("DoubanDiablo", accessToken + ", " + tokenSecret);
 		douban = new DoubanAccessor(accessToken, tokenSecret);
 		DoubanAuthData current = DoubanAuthData.getCurrent();
 		if (current != null) {
@@ -291,7 +293,7 @@ public class DoubanAccessor {
 		// Log.i("DoubanDiablo", " " + XmlUtil.xmlDocumentToString(doc));
 
 		NodeList entryList = doc.getElementsByTagName("entry");
-		Log.i("DoubanDiablo", " " + entryList.getLength());
+		//Log.i("DoubanDiablo", " " + entryList.getLength());
 		for (int i = 0; i < entryList.getLength(); i++) {
 			friendList.add(parseUser(entryList.item(i)));
 			// Log.i("DoubanDiablo",
@@ -546,7 +548,76 @@ public class DoubanAccessor {
 		// Log.i("DoubanDiablo", "startIndex: " + startIndex);
 		return list;
 	}
+	
+	public List<DoubanNote> getNotes(DoubanUser user, int start, int length){
+		List<DoubanNote> list = new ArrayList<DoubanNote>();
+		String url = "";
+		if(user.getId() != null){
+			url = user.getId() + "/notes?start-index=" + start + "&max-results=" + length;
+		}else{
+			url = "http://api.douban.com/people/" + user.getUid() + "/notes?start-index=" + start + "&max-results=" + length;
+		}
+		//Log.i("DoubanDiablo", user.toString());
+		Document doc = getDocument(url);
+		NodeList entryList = doc.getElementsByTagName("entry");
+		
+		for (int i = 0; i < entryList.getLength(); i++) {
+			DoubanNote note = parseNote(entryList.item(i));
+			
+			note.setAuthor(user);
+			
+			list.add(note);
+		}
+		
+		return list;
+	}
+	
+	private static DoubanNote parseNote(Node entryNode){
+		DoubanNote note = new DoubanNote();
+		NodeList list = entryNode.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node node = list.item(i);
+			if (node.hasChildNodes()) {
 
+				String tag = node.getNodeName();
+				String value = node.getFirstChild().getNodeValue();
+				// Log.i("DoubanDiablo", tag + ": " + value);
+				if (tag.equals("id")) {
+					note.setId(value);
+				} else if (tag.equals("title")) {
+					note.setTitle(value);
+				} else if (tag.equals("published")) {
+					try {
+						note.setPublished(new SimpleDateFormat(
+								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}else if (tag.equals("updated")) {
+					try {
+						note.setUpdated(new SimpleDateFormat(
+								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				} else if (tag.equals("content")) {
+					note.setContent(value);
+				} else if(tag.equals("summary")){
+					note.setSummary(value);
+				}else if (tag.equals("db:attribute")) {
+					if (node.getAttributes().getNamedItem("name")
+							.getNodeValue().equals("can_reply") && value.equals("yes")) {						
+						note.setCanReply(true);						
+					} 
+				} 
+			} else {
+				
+			}
+		}
+
+		
+		return note;
+	}
 	private static Doumail parseDoumail(Node entryNode) {
 		Doumail mail = new Doumail();
 		NodeList list = entryNode.getChildNodes();
@@ -607,6 +678,7 @@ public class DoubanAccessor {
 				Node node = list.item(i);
 				String tag = node.getNodeName();
 				String value = node.getFirstChild().getNodeValue();
+				//Log.i("DoubanDiablo", "~~~" + tag + ": " + value);
 				if (tag.equalsIgnoreCase("id")) {
 					user.setId(value);
 				} else if (tag.equalsIgnoreCase("db:uid")) {
@@ -719,7 +791,7 @@ public class DoubanAccessor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
-			Log.i("DoubanDiablo", "URISyntaxException");
+			//Log.i("DoubanDiablo", "URISyntaxException");
 		}
 		return null;
 	}
