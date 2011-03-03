@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.Doumail;
+import diablo.douban.common.HomepageActivity;
 import diablo.douban.common.IDoubanDataProvider;
 import diablo.douban.common.LoaderImageView;
 
@@ -21,6 +22,7 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 	private DoubanAccessor douban;
 	private ListActivity activity;
 	private static boolean inbox = true;
+	private int length = 10;
 
 	public DoumailDatasProvider(DoubanAccessor douban, ListActivity activity){
 		this.douban = douban;
@@ -29,7 +31,7 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 	}
 
 	
-	public ListAdapter getDatas(int start, int length) {
+	public ListAdapter getDatas(int start) {
 		List<Doumail> doumailList = null;
 		if (inbox) {
 			doumailList = douban.getDoumailList("INBOX", false, start, length);
@@ -64,11 +66,11 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 		}else{
 			btn1.setText("转到收件箱"); 
 		}
-		btn1.setOnClickListener(new OnClickListener() {			
-			
+		btn1.setOnClickListener(new OnClickListener() {	
 			public void onClick(View v) {
+				((HomepageActivity)activity).removeExtraView();
 				inbox = !inbox;				
-				activity.showDialog(0);
+				activity.showDialog(0);				
 				btn1.setEnabled(false);
 			}
 		});

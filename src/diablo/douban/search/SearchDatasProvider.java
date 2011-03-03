@@ -34,6 +34,8 @@ public class SearchDatasProvider implements IDoubanDataProvider {
 	public static String keyword;	
 	public static int searchType;
 	
+	private int length = 15;
+	
 	private Handler handler;
 	public SearchDatasProvider(DoubanAccessor douban, Activity activity, Handler handler) {
 		this.douban = douban;
@@ -42,7 +44,7 @@ public class SearchDatasProvider implements IDoubanDataProvider {
 		this.handler = handler;
 	}
 	
-	public ListAdapter getDatas(int start, int length) {
+	public ListAdapter getDatas(int start) {
 		ListAdapter adapter = null;
 		switch(searchType){
     	case 0:

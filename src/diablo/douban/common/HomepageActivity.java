@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +41,7 @@ import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.broadcast.BroadcastDatasProvider;
 import diablo.douban.broadcast.SayingActivity;
 import diablo.douban.doumail.DoumailDatasProvider;
+import diablo.douban.note.NoteDataProvider;
 import diablo.douban.relationship.ContactDatasProvider;
 import diablo.douban.relationship.ContactsActivity;
 import diablo.douban.search.SearchDatasProvider;
@@ -68,36 +70,59 @@ public class HomepageActivity extends ListActivity {
 	private IDoubanDataProvider dataProvider;
 
 	private View extraHeadView, extraFootView;
+	private ViewGroup.MarginLayoutParams mlp;
+	private int marginPixelBottom = 0;
 
 	protected void onProgressLoadData() {
 		douban.totalResults = "0";
+		marginPixelBottom = 0;
 		iconList = new ArrayList<String>();
 
+		/*
+		 R.drawable.m_homepage,                        
+        R.drawable.m_friend,
+        R.drawable.m_note,
+        R.drawable.m_movie,
+        R.drawable.m_book,            
+        R.drawable.m_music,
+        R.drawable.m_activity,
+        R.drawable.m_search,
+        R.drawable.m_doumail,
+		 */
 		switch (type) {
 		case 0: // home page
 			dataProvider = new BroadcastDatasProvider(douban, this);
+			marginPixelBottom = 40;
 			break;
 		case 1: // friend
-			dataProvider = new ContactDatasProvider(douban, this);
+			dataProvider = new ContactDatasProvider(douban, this);			
 			break;
-		case 2: // movie
+		case 2: // note
+			dataProvider = new NoteDataProvider(douban, this, douban.getMe());
 			break;
-		case 3: // book
+		case 3: // movie
 			break;
-		case 4: // music
+		case 4: // book
 			break;
-		case 5: // doumail
+		case 5: // music
+			break;
+		case 8: // doumail
 			dataProvider = new DoumailDatasProvider(douban, this);
+			marginPixelBottom = 25;
 			break;
-		case 6: // search
+		case 7: // search
 			dataProvider = new SearchDatasProvider(douban, this, searchDialog);
+			marginPixelBottom = 40;
+			break;
+		case 6:
 			break;
 		case 10: // comments
 			break;
 		}
+
 		if (dataProvider != null) {
 			paginatorTitleText = dataProvider.getPaginatorText();
-			adapter = dataProvider.getDatas(start, length);
+			adapter = dataProvider.getDatas(start);
 
 			this.extraHeadView = dataProvider.getHeaderView();
 			this.extraFootView = dataProvider.getFootView();
@@ -105,30 +130,28 @@ public class HomepageActivity extends ListActivity {
 		}
 	}
 
-	
 	private void resetPage() {
 		start = 1;
 		length = SIZE_PER_PAGE;
 	}
 
 	protected void onProgressComplete() {
-		setListAdapter(adapter); 
+		setListAdapter(adapter);
 		if (extraHeadView != null) {
 			ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			addContentView(extraHeadView, lp);
-		} 
+		}
 		if (extraFootView != null) {
 			Log.i(TAG, "addContentView");
 			ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			addContentView(extraFootView, lp);
-
-			ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) HomepageActivity.this
-					.getListView().getLayoutParams();
-			mlp.setMargins(0, 40, 0, 40);
+			// extraFootView.m
+			
+			
 		}
-		
+		mlp.setMargins(0, 40, 0, marginPixelBottom);
 		if (start == 1) {
 			prePage.setEnabled(false);
 		} else {
@@ -165,7 +188,7 @@ public class HomepageActivity extends ListActivity {
 		}
 		showDialog(0);
 	}
-	
+
 	AlertDialog.Builder builder;
 	AlertDialog alert;
 
@@ -183,7 +206,7 @@ public class HomepageActivity extends ListActivity {
 		this.getListView().addHeaderView(headView);
 
 		builder = new AlertDialog.Builder(this);
-		
+
 		SharedPreferences sp = getSharedPreferences("token",
 				MODE_WORLD_WRITEABLE);
 		editor = sp.edit();
@@ -235,6 +258,8 @@ public class HomepageActivity extends ListActivity {
 		getListView().addFooterView(view);
 		setListAdapter(new ArrayAdapter<String>(this,
 				R.layout.glance_list_item, new ArrayList<String>()));
+		mlp = (ViewGroup.MarginLayoutParams) HomepageActivity.this
+				.getListView().getLayoutParams();
 		// showDialog(PROGRESS_DIALOG);
 	}
 
@@ -347,22 +372,23 @@ public class HomepageActivity extends ListActivity {
 			}
 		}
 	};
-	
-	final Handler searchDialog = new Handler(){
+
+	final Handler searchDialog = new Handler() {
 		public void handleMessage(Message msg) {
 			removeExtraView();
 			SearchDatasProvider.keyword = msg.getData().getString("keyword");
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle("ÇëÑ¡ÔñËÑË÷Àà±ð");
-			builder.setSingleChoiceItems(SearchDatasProvider.searchClassify, -1, new DialogInterface.OnClickListener() {
-			    public void onClick(DialogInterface dialog, int item) {		       
-			    	SearchDatasProvider.searchType = item;
-			    	dialog.dismiss();
-			    	activity.showDialog(0);		    	
-			        
-			    }
-			});
-			
+			builder.setSingleChoiceItems(SearchDatasProvider.searchClassify,
+					-1, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							SearchDatasProvider.searchType = item;
+							dialog.dismiss();
+							activity.showDialog(0);
+
+						}
+					});
+
 			builder.create().show();
 		}
 	};

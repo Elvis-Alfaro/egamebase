@@ -16,6 +16,7 @@ import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
+import diablo.douban.common.HomepageActivity;
 import diablo.douban.common.IDoubanDataProvider;
 import diablo.douban.common.LoaderImageView;
 
@@ -33,8 +34,8 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 		//Log.i("DoubanDiablo", "in BroadcastDatasProvider: " + (listener == null));
 	}
 	
-	
-	public ListAdapter getDatas(int start, int length) {
+	private int length = 15;
+	public ListAdapter getDatas(int start) {
 		List<DoubanBroadcast> list = douban.getBroadcast("broadcast", DoubanAuthData.getCurrent().getUserid(), start, length);			
 		
 		for(DoubanBroadcast b : list){
@@ -93,9 +94,10 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 		submit.setText(R.string.I_say); 
 		
 		submit.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
+			public void onClick(View v){				
 				douban.postSaying(content.getText().toString());
 				content.setText("");
+				((HomepageActivity)activity).removeExtraView();
 				activity.showDialog(0);
 			}
 		});
@@ -104,7 +106,7 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 				RelativeLayout.LayoutParams.WRAP_CONTENT); // Verbose!
 		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
 		lp.addRule(RelativeLayout.RIGHT_OF, 998);
-		view.addView(submit, lp);
+		view.addView(submit, lp);		
 		return view;
 	}
 
