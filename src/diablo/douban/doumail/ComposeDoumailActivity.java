@@ -44,6 +44,7 @@ public class ComposeDoumailActivity extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.doumail_form);
 		
 		mail = (Doumail) getIntent().getSerializableExtra(DOUMAIL);

@@ -124,8 +124,11 @@ public class SearchDatasProvider implements IDoubanDataProvider {
 	}
 
 	public String getPaginatorText() {
-		// TODO Auto-generated method stub
-		return searchClassify[searchType] + "ËÑË÷";
+		if(keyword == null || keyword.trim().equals("")){
+			return "¶¹°êËÑË÷(ËÑÓÃ»§/Ó°/Òô/Êé)";
+		}else{
+			return searchClassify[searchType] + "ËÑË÷";
+		}
 	}
 
 }

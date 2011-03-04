@@ -18,8 +18,11 @@ import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.accessor.pojo.DoubanNote;
+import diablo.douban.accessor.pojo.ReviewItem;
 import diablo.douban.broadcast.CommentsActivity;
 import diablo.douban.common.LoaderImageView;
+import diablo.douban.glance.AbstractReviewActivity;
+import diablo.douban.glance.ItemContentActivity;
 
 public class NotesAdapter  extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -63,7 +66,9 @@ public class NotesAdapter  extends BaseAdapter {
 			//holder.info = (TextView) convertView.findViewById(R.id.saying_info);
 			//holder.info.setVisibility(View.GONE);
 			holder.replyText = (TextView) convertView.findViewById(R.id.saying_reply);
+			holder.replyText.setVisibility(View.GONE);
 			holder.reply = (Button) convertView.findViewById(R.id.saying_reply_btn);
+			holder.reply.setText("查看全文");
 			holder.detail = (TextView)convertView.findViewById(R.id.saying_detail);
 			holder.time = (TextView) convertView.findViewById(R.id.saying_time);
 			//holder.detailImg = (LoaderImageView)convertView.findViewById(R.id.saying_image);
@@ -96,7 +101,10 @@ public class NotesAdapter  extends BaseAdapter {
 		
 		holder.reply.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Intent intent = new Intent(activity, NoteDetailActivity.class);
 				
+				intent.putExtra("content", note);				
+				activity.startActivity(intent);
 			}
 		});
 
