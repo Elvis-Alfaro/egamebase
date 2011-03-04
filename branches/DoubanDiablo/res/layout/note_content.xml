@@ -8,16 +8,39 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:textSize="18sp"
+		android:textColor="#FFF"
+		android:ems="20"
+		/>
+	<TextView 
+		android:id="@+id/publish_time"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
 		/>
 	<ScrollView 
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
 		android:padding="10dip">
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:id="@+id/content_text"
 			android:textSize="12px"
+			android:textColor="#FFF"
 			 />	
 	</ScrollView>
+	<TextView 
+		android:id="@+id/privacy"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
+		/>
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="编辑"
+		android:visibility="gone"
+		android:background="@drawable/orange_btn"
+		android:id="@+id/edit"
+		/>
 </LinearLayout>

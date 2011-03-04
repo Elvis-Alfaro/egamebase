@@ -30,6 +30,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -62,6 +63,7 @@ public class DoubanAccessor {
 	public static final String SAYING = "http://api.douban.com/miniblog/saying";
 	public static final String DOUMAIL_INBOX = "http://api.douban.com/doumail/inbox";
 	public static final String DOUMAIL_OUTBOX = "http://api.douban.com/doumail/outbox";
+	public static final String NOTE = "http://api.douban.com/notes";
 	public String totalResults = "0", itemsPerPage = "0", startIndex = "0";
 
 	public static String consumerKey = "01d679e540c966c405836dafc25c344c";
@@ -338,6 +340,42 @@ public class DoubanAccessor {
 			Log.e(TAG, e.getMessage(), e);
 		}
 	}
+	/*
+	<?xml version="1.0" encoding="UTF-8"?>
+	<entry xmlns="http://www.w3.org/2005/Atom"
+	xmlns:db="http://www.douban.com/xmlns/">
+	<title>ABOUT ME</title>
+	<content>
+	        在失去勇气的日子里，要提醒自己的好！  我从来不寻找任何避风港，20多年的日子里每个选择都来自我自己，我比你们想象的都要坚强。我为我的坚强付出了很多，却到现在依然没有后悔过任何。 我从不觉得牺牲自己是件多伟大的事，没有人是需要别人来成全的，从来不想以自己的付出作为最后的救命稻草，这种付出委实是在出卖尊严......
+	</content>
+	<db:attribute name="privacy">private</db:attribute>
+	<db:attribute name="can_reply">yes</db:attribute>
+	</entry>
+	*/
+	public DoubanNote postNote(String title, String content, String privacy, boolean canReply){
+		HttpPost post = new HttpPost(NOTE);
+		post.addHeader("Authorization", getAuthHeader("POST", NOTE));
+		post.addHeader("Content-Type", "application/atom+xml");
+		try {
+			String xml = "<?xml version='1.0' encoding='UTF-8'?>"
+				+ "<entry xmlns='http://www.w3.org/2005/Atom' xmlns:db='http://www.douban.com/xmlns/' xmlns:gd='http://schemas.google.com/g/2005' xmlns:opensearch='http://a9.com/-/spec/opensearchrss/1.0/'>"
+				+"<title>" + title + "</title>"
+				+ "<content>" + content + "</content>"
+				+ "<db:attribute name=\"privacy\">" + privacy + "</db:attribute>"
+				+ "<db:attribute name=\"can_reply\">" + (canReply ? "yes" : "no") + "</db:attribute>"
+				+ "</entry>" ;
+			Log.i("DoubanDiablo", xml);
+			StringEntity myEntity = new StringEntity(xml, "utf-8");
+			post.setEntity(myEntity);
+			HttpResponse resp = httpclient.execute(post);
+			Document doc = documentBuilder.parse(resp.getEntity().getContent());
+			return parseNote(doc.getElementsByTagName("entry").item(0));
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		}
+	}
+	
 
 	public String postDoumail(String uid, String title, String content) {
 		HttpPost post = new HttpPost(POST_DOUMAIL);
@@ -608,7 +646,10 @@ public class DoubanAccessor {
 					if (node.getAttributes().getNamedItem("name")
 							.getNodeValue().equals("can_reply") && value.equals("yes")) {						
 						note.setCanReply(true);						
-					} 
+					} else if(node.getAttributes().getNamedItem("name")
+							.getNodeValue().equals("privacy")){
+						note.setPrivacy(value);
+					}
 				} 
 			} else {
 				

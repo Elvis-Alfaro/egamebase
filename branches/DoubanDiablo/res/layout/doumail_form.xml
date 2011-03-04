@@ -5,6 +5,7 @@
 	android:padding="6dip"
 	android:id="@+id/layout">
 	<RelativeLayout 
+		android:id="@+id/doumail_from"
 		android:layout_height="wrap_content" 
 		android:orientation="horizontal"
 		android:layout_gravity="center_vertical"
@@ -24,6 +25,7 @@
 				android:background="@drawable/android_btn" />
 	</RelativeLayout>
 	<LinearLayout 
+		android:id="@+id/doumail_to"
 		android:layout_height="wrap_content" 
 		android:orientation="horizontal"
 		android:layout_gravity="center_vertical"
@@ -106,13 +108,12 @@
 		<Button android:layout_height="wrap_content" 
 			android:layout_width="wrap_content"
 			android:id="@+id/submit"
-			 android:padding="5dip"
-			android:background="@drawable/android_btn"
+			android:background="@drawable/orange_btn"
 			android:text="@string/submit"/>
 		<Button android:layout_height="wrap_content" 
 			android:layout_width="wrap_content"
-			 android:padding="5dip"
-			android:background="@drawable/android_btn"
+			android:layout_marginLeft="5px"
+			android:background="@drawable/orange_btn"
 			android:id="@+id/cancle"
 			android:text="@string/cancle"/>
 	</LinearLayout>

@@ -3,6 +3,7 @@ package diablo.douban.glance;
 import android.R.color;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 import diablo.douban.R;
 import diablo.douban.R.id;
@@ -25,6 +26,7 @@ public class ItemContentActivity extends Activity{
 		//this.setTitleColor(color.primary_text_light);		
 		
 		head = (TextView)findViewById(R.id.content_title_text);
-		head.setText(content.getTitle());
+		head.setMovementMethod(LinkMovementMethod.getInstance());
+		head.setText(android.text.Html.fromHtml(content.getTitle()));
 	}
 }

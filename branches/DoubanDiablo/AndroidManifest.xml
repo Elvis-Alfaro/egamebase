@@ -37,6 +37,13 @@
 		<activity android:name=".doumail.ComposeDoumailActivity"
 			android:theme="@android:style/Theme.Dialog" android:label="@string/send_doumail">
 		</activity>
+		<activity android:name=".note.WriteNoteActivity"
+			android:theme="@android:style/Theme.Dialog">
+		</activity>
+		<activity android:name=".note.NoteDetailActivity"
+			android:theme="@android:style/Theme.Dialog">
+		</activity>
+		
 		<activity android:name=".relationship.ContactsActivity"
 			 android:label="@string/my_contacts">
 		</activity>

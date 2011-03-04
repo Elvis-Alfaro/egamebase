@@ -131,7 +131,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 		int totalResult = Integer.parseInt(DoubanAccessor.getInstance().totalResults);
 		end = end > totalResult ? totalResult : end;
 		String pageInfo = "(" + start + "-" + end +",共" + DoubanAccessor.getInstance().totalResults + "条回复.)";
-		paginatorTitle.setText("广播回复" + pageInfo);
+		paginatorTitle.setText("回复" + pageInfo);
 		if(start == 1){
 			prePage.setEnabled(false);
 		}else{

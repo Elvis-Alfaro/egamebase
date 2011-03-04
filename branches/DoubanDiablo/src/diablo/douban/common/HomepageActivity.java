@@ -47,7 +47,6 @@ import diablo.douban.relationship.ContactsActivity;
 import diablo.douban.search.SearchDatasProvider;
 
 public class HomepageActivity extends ListActivity {
-	public static final int SIZE_PER_PAGE = 20;
 	public static final int PROGRESS_DIALOG = 0;
 	protected Activity activity;
 	ProgressThread progressThread;
@@ -57,8 +56,8 @@ public class HomepageActivity extends ListActivity {
 
 	private TextView paginatorTitle;
 	private Button prePage, nextPage;
-	private int start = 1, length = SIZE_PER_PAGE;
-
+	private int start = 1;
+	private static int length;
 	private ListAdapter adapter;
 
 	private int type = 0;
@@ -73,7 +72,9 @@ public class HomepageActivity extends ListActivity {
 	private ViewGroup.MarginLayoutParams mlp;
 	private int marginPixelBottom = 0;
 
+	private static boolean refreshPage = true;
 	protected void onProgressLoadData() {
+		refreshPage = true;
 		douban.totalResults = "0";
 		marginPixelBottom = 0;
 		iconList = new ArrayList<String>();
@@ -91,13 +92,18 @@ public class HomepageActivity extends ListActivity {
 		 */
 		switch (type) {
 		case 0: // home page
+			length = 15;
 			dataProvider = new BroadcastDatasProvider(douban, this);
 			marginPixelBottom = 40;
 			break;
 		case 1: // friend
+			length = 15;
+			refreshPage = false;
 			dataProvider = new ContactDatasProvider(douban, this);			
 			break;
 		case 2: // note
+			length = 5;
+			//refreshPage = false;
 			dataProvider = new NoteDataProvider(douban, this, douban.getMe());
 			break;
 		case 3: // movie
@@ -107,10 +113,12 @@ public class HomepageActivity extends ListActivity {
 		case 5: // music
 			break;
 		case 8: // doumail
+			length = 15;
 			dataProvider = new DoumailDatasProvider(douban, this);
 			marginPixelBottom = 25;
 			break;
 		case 7: // search
+			length = 15;
 			dataProvider = new SearchDatasProvider(douban, this, searchDialog);
 			marginPixelBottom = 40;
 			break;
@@ -132,7 +140,6 @@ public class HomepageActivity extends ListActivity {
 
 	private void resetPage() {
 		start = 1;
-		length = SIZE_PER_PAGE;
 	}
 
 	protected void onProgressComplete() {
@@ -160,7 +167,7 @@ public class HomepageActivity extends ListActivity {
 
 		int end = 0, totalResult = Integer.parseInt(DoubanAccessor
 				.getInstance().totalResults);
-		end = start + length;
+		end = start + length - 1;
 		if (totalResult != 0) {
 			end = end > totalResult ? totalResult : end;
 			paginatorTitleText += "(" + start + "-" + end + ", ¹²" + totalResult
@@ -186,7 +193,10 @@ public class HomepageActivity extends ListActivity {
 		if (DoubanAuthData.getCurrent() != null) {
 			reloadHeadView(DoubanAuthData.getCurrent());
 		}
-		showDialog(0);
+		removeExtraView();
+		if(refreshPage){
+			showDialog(0);
+		}
 	}
 
 	AlertDialog.Builder builder;
@@ -199,12 +209,13 @@ public class HomepageActivity extends ListActivity {
 		this.getListView().setBackgroundResource(
 				DoubanDiablo.currentBgResourceId);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
-		activity = this;
-		headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
+		activity = this; 
+		if(DoubanAuthData.getCurrent() != null){
+			headView = HeadViewInflateHelper.inflateMe(this, DoubanAuthData
 				.getCurrent().getUsername(), DoubanAuthData.getCurrent()
 				.getIcon());
-		this.getListView().addHeaderView(headView);
-
+			this.getListView().addHeaderView(headView);
+		}
 		builder = new AlertDialog.Builder(this);
 
 		SharedPreferences sp = getSharedPreferences("token",
