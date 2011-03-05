@@ -26,17 +26,18 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 	private DoubanAccessor douban;
 	private ListActivity activity;
 	//private SayingAdapter.OnReplyClickListener listener;
-	
-	public BroadcastDatasProvider(DoubanAccessor douban, ListActivity activity) {
+	private String uid;
+	public BroadcastDatasProvider(DoubanAccessor douban, ListActivity activity, String uid) {
 		this.douban = douban;
 		this.activity = activity;
 		iconList = new ArrayList<String>();
+		this.uid = uid;
 		//Log.i("DoubanDiablo", "in BroadcastDatasProvider: " + (listener == null));
 	}
 	
 	private int length = 15;
 	public ListAdapter getDatas(int start) {
-		List<DoubanBroadcast> list = douban.getBroadcast("broadcast", DoubanAuthData.getCurrent().getUserid(), start, length);			
+		List<DoubanBroadcast> list = douban.getBroadcast("broadcast", uid, start, length);			
 		
 		for(DoubanBroadcast b : list){
 			if(b.getUser()!=null && iconList.contains(b.getUser().getIcon())){

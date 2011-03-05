@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,8 +33,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 	
 
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);		
 		curBd = (DoubanBroadcast) getIntent().getSerializableExtra("DATA");
 		adapter = new SimpleAdapter(this, new ArrayList<Map<String, Object>>(),
 				R.layout.comments_list_item,

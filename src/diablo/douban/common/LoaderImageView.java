@@ -125,8 +125,7 @@ public class LoaderImageView extends LinearLayout {
 		}
 		mImage = new ImageView(mContext);
 		mImage.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
-
+				LayoutParams.WRAP_CONTENT));	
 		mSpinner = new ProgressBar(mContext);
 		mSpinner.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT));

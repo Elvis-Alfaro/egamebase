@@ -19,6 +19,7 @@ import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.common.LoaderImageView;
+import diablo.douban.user.UserDetailActivity;
 
 public class SayingAdapter  extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -122,8 +123,11 @@ public class SayingAdapter  extends BaseAdapter {
 		
 		holder.user.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Uri uri = Uri.parse(bd.getUser().getAlternate());  
+/*				Uri uri = Uri.parse(bd.getUser().getAlternate());  
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri );
+				activity.startActivity(intent);*/
+				Intent intent = new Intent(activity, UserDetailActivity.class);				
+				intent.putExtra("user", bd.getUser());
 				activity.startActivity(intent);
 			}
 		});

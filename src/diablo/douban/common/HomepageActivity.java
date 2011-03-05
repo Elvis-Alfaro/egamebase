@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,6 +37,7 @@ import diablo.douban.LoginActivity;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanAuthData;
+import diablo.douban.accessor.pojo.DoubanUser;
 import diablo.douban.broadcast.BroadcastDatasProvider;
 import diablo.douban.broadcast.SayingActivity;
 import diablo.douban.doumail.DoumailDatasProvider;
@@ -46,7 +46,38 @@ import diablo.douban.relationship.ContactDatasProvider;
 import diablo.douban.relationship.ContactsActivity;
 import diablo.douban.search.SearchDatasProvider;
 
+
 public class HomepageActivity extends ListActivity {
+	/*
+	 * R.drawable.m_homepage,                        
+            R.drawable.m_friend,
+            R.drawable.m_note,
+            R.drawable.m_movie,
+            R.drawable.m_book,            
+            R.drawable.m_music,
+            R.drawable.m_activity,
+            R.drawable.m_search,
+            R.drawable.m_doumail,
+	 */
+	public enum MenuType{
+		broadcast(0),
+		friend(1),
+		note(2),
+		movie(3),
+		music(4),
+		book(5),
+		activity(6),
+		search(7),
+		doumail(8),
+		other(10);
+		MenuType(int index){
+			this.index = index;
+		}
+		public int getIndex(){
+			return index;
+		}
+		private final int index;
+	}
 	public static final int PROGRESS_DIALOG = 0;
 	protected Activity activity;
 	ProgressThread progressThread;
@@ -56,15 +87,14 @@ public class HomepageActivity extends ListActivity {
 
 	private TextView paginatorTitle;
 	private Button prePage, nextPage;
-	private int start = 1;
+	private static int start = 1;
 	private static int length;
 	private ListAdapter adapter;
 
-	private int type = 0;
+	private static MenuType type = MenuType.broadcast;
 
 	private String paginatorTitleText;
 
-	private List<String> iconList;
 	private static DoubanAccessor douban = DoubanAccessor.getInstance();
 	private IDoubanDataProvider dataProvider;
 
@@ -73,58 +103,59 @@ public class HomepageActivity extends ListActivity {
 	private int marginPixelBottom = 0;
 
 	private static boolean refreshPage = true;
+	
+	public static DoubanUser current = douban.getMe();
+	
+	public static void reloadData(DoubanUser user, MenuType t){
+		current = user;
+		type = t;
+		resetPage();
+		HeadMenuAdapter.currentSelection = t.getIndex();
+		headMenu.setSelection(Integer.MAX_VALUE / 2 + t.getIndex());
+		
+		refreshPage = true;
+	}
+	
 	protected void onProgressLoadData() {
 		refreshPage = true;
 		douban.totalResults = "0";
 		marginPixelBottom = 0;
-		iconList = new ArrayList<String>();
-
-		/*
-		 R.drawable.m_homepage,                        
-        R.drawable.m_friend,
-        R.drawable.m_note,
-        R.drawable.m_movie,
-        R.drawable.m_book,            
-        R.drawable.m_music,
-        R.drawable.m_activity,
-        R.drawable.m_search,
-        R.drawable.m_doumail,
-		 */
+	
 		switch (type) {
-		case 0: // home page
+		case broadcast: // home page
 			length = 15;
-			dataProvider = new BroadcastDatasProvider(douban, this);
+			dataProvider = new BroadcastDatasProvider(douban, this, current.getUid());
 			marginPixelBottom = 40;
 			break;
-		case 1: // friend
+		case friend: // friend
 			length = 15;
 			refreshPage = false;
 			dataProvider = new ContactDatasProvider(douban, this);			
 			break;
-		case 2: // note
+		case note: // note
 			length = 5;
 			//refreshPage = false;
-			dataProvider = new NoteDataProvider(douban, this, douban.getMe());
+			dataProvider = new NoteDataProvider(douban, this, current);
 			break;
-		case 3: // movie
+		case movie: // movie
 			break;
-		case 4: // book
+		case book: // book
 			break;
-		case 5: // music
+		case music: // music
 			break;
-		case 8: // doumail
+		case doumail: // doumail
 			length = 15;
 			dataProvider = new DoumailDatasProvider(douban, this);
 			marginPixelBottom = 25;
 			break;
-		case 7: // search
+		case search: // search
 			length = 15;
 			dataProvider = new SearchDatasProvider(douban, this, searchDialog);
 			marginPixelBottom = 40;
 			break;
-		case 6:
+		case activity:
 			break;
-		case 10: // comments
+		case other: // comments
 			break;
 		}
 
@@ -138,7 +169,7 @@ public class HomepageActivity extends ListActivity {
 		}
 	}
 
-	private void resetPage() {
+	private static void resetPage() {
 		start = 1;
 	}
 
@@ -201,7 +232,7 @@ public class HomepageActivity extends ListActivity {
 
 	AlertDialog.Builder builder;
 	AlertDialog alert;
-
+	static Gallery headMenu;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -222,21 +253,23 @@ public class HomepageActivity extends ListActivity {
 				MODE_WORLD_WRITEABLE);
 		editor = sp.edit();
 
-		final Gallery g = (Gallery) findViewById(R.id.gallery);
+		headMenu = (Gallery) findViewById(R.id.gallery);
 		final HeadMenuAdapter adapter = new HeadMenuAdapter(this);
-		g.setAdapter(adapter);
-		g.setSelection(Integer.MAX_VALUE / 2);
+		headMenu.setAdapter(adapter);
+		headMenu.setSelection(Integer.MAX_VALUE / 2);
 
-		g.setOnItemClickListener(new OnItemClickListener() {
+		headMenu.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView parent, View v, int position,
 					long id) {
+				Log.i(TAG, position + ", " + position % HeadMenuAdapter.mImageIds.length);
 				if (position >= HeadMenuAdapter.mImageIds.length) {
 					position = position % HeadMenuAdapter.mImageIds.length;
 				}
-
+				current = DoubanAccessor.getInstance().getMe();
 				HeadMenuAdapter.currentSelection = position;
 				adapter.notifyDataSetChanged();
-				type = position;
+				type = MenuType.values()[position];
+				
 				resetPage();
 				removeExtraView();
 				showDialog(PROGRESS_DIALOG);
@@ -254,6 +287,7 @@ public class HomepageActivity extends ListActivity {
 			public void onClick(View v) {
 				start -= length;
 				start = start < 1 ? 1 : start;
+				removeExtraView();
 				showDialog(PROGRESS_DIALOG);
 			}
 		});
@@ -262,7 +296,7 @@ public class HomepageActivity extends ListActivity {
 		nextPage.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				start += length;
-
+				removeExtraView();
 				showDialog(PROGRESS_DIALOG);
 			}
 		});
@@ -296,7 +330,7 @@ public class HomepageActivity extends ListActivity {
 
 	private void reloadHeadView(DoubanAuthData cur) {
 		LoaderImageView img = (LoaderImageView) headView
-				.findViewById(R.id.thumbnailMe);
+				.findViewById(R.id.thumbnailMe);		
 		img.setImageDrawable(cur.getIcon());
 		TextView welcome = (TextView) headView.findViewById(R.id.welcome);
 		welcome.setText("»¶Ó­Äã£¬" + cur.getUsername());

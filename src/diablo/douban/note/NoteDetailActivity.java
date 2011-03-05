@@ -43,7 +43,7 @@ public class NoteDetailActivity extends Activity{
 		}else if(content.getPrivacy().equals("friend")){
 			privacy.setText("阅读权限：仅朋友可见");
 		}else{
-			privacy.setText("阅读权限：仅自己可见");
+			privacy.setText("阅读权限：仅自己可见"); 
 		}
 		
 		Button edit = (Button)findViewById(R.id.edit);
@@ -54,7 +54,8 @@ public class NoteDetailActivity extends Activity{
 				public void onClick(View v) {
 					Intent intent = new Intent(NoteDetailActivity.this, WriteNoteActivity.class);
 					intent.putExtra("content", content);
-					NoteDetailActivity.this.startActivity(intent);					
+					NoteDetailActivity.this.startActivity(intent);
+					NoteDetailActivity.this.finish();
 				}
 			});
 		}

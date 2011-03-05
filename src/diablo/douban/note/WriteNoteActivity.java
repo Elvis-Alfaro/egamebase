@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -21,7 +22,7 @@ public class WriteNoteActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.doumail_form);
-		DoubanNote data = (DoubanNote)getIntent().getSerializableExtra("content");
+		final DoubanNote data = (DoubanNote)getIntent().getSerializableExtra("content");
 		
 		findViewById(R.id.doumail_from).setVisibility(View.GONE);
 		findViewById(R.id.doumail_to).setVisibility(View.GONE);
@@ -49,7 +50,13 @@ public class WriteNoteActivity extends Activity{
 		    	}else{
 		    		privacy = "private";
 		    	}
-		    	DoubanNote note = DoubanAccessor.getInstance().postNote(title.getText().toString(), content.getText().toString(), privacy, true);
+		    	DoubanNote note = null;
+		    	if(data == null){
+		    		note = DoubanAccessor.getInstance().postNote(null, title.getText().toString(), content.getText().toString(), privacy, true);
+		    	}else if(data.getId() != null){
+		    		Log.i("DoubanDiablo", data.getId());
+		    		note = DoubanAccessor.getInstance().postNote(data.getId(), title.getText().toString(), content.getText().toString(), privacy, true);
+		    	}
 		        dialog.dismiss();
 		        if(note != null){
 		        	Intent intent = new Intent(WriteNoteActivity.this, NoteDetailActivity.class);
