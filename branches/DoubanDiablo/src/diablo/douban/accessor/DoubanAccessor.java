@@ -26,11 +26,12 @@ import net.oauth.client.httpclient4.HttpClient4;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -275,6 +276,11 @@ public class DoubanAccessor {
 
 	}
 
+	public DoubanUser getPeopleByUrl(String url){
+		Document doc = getDocument(url);
+		return parseUser(doc.getElementsByTagName("entry").item(0));
+	}
+	
 	public List<DoubanUser> getPeopleFriends(String userid, int start, int max) {
 		String url = "";
 		String authUrl = "";
@@ -352,9 +358,16 @@ public class DoubanAccessor {
 	<db:attribute name="can_reply">yes</db:attribute>
 	</entry>
 	*/
-	public DoubanNote postNote(String title, String content, String privacy, boolean canReply){
-		HttpPost post = new HttpPost(NOTE);
-		post.addHeader("Authorization", getAuthHeader("POST", NOTE));
+	public DoubanNote postNote(String url, String title, String content, String privacy, boolean canReply){
+		HttpEntityEnclosingRequestBase post = null;
+		if(url == null){			
+			post = new HttpPost(NOTE);
+			post.addHeader("Authorization", getAuthHeader("POST", NOTE));
+		}else{
+			post = new HttpPut(url);
+			post.addHeader("Authorization", getAuthHeader("PUT", url));
+		}
+		
 		post.addHeader("Content-Type", "application/atom+xml");
 		try {
 			String xml = "<?xml version='1.0' encoding='UTF-8'?>"
@@ -375,6 +388,7 @@ public class DoubanAccessor {
 			return null;
 		}
 	}
+	
 	
 
 	public String postDoumail(String uid, String title, String content) {
@@ -631,6 +645,8 @@ public class DoubanAccessor {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+				} else if(tag.equals("author")){
+					note.setAuthor(parseUser(node));
 				}else if (tag.equals("updated")) {
 					try {
 						note.setUpdated(new SimpleDateFormat(

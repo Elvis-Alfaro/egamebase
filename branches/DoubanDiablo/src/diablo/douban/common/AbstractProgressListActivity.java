@@ -50,12 +50,15 @@ public abstract class AbstractProgressListActivity extends ListActivity {
 //				.getIcon());
 //		this.getListView().addHeaderView(headView);
 
+		
 		SharedPreferences sp = getSharedPreferences("token",
 				MODE_WORLD_WRITEABLE);
 		editor = sp.edit();
+		
 		final Gallery g = (Gallery) findViewById(R.id.gallery);
 		g.setVisibility(View.GONE);
 		(findViewById(R.id.header)).setVisibility(View.GONE);
+		
 	}
 
 	@Override

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"	
+	android:padding="2dip"
+	>
+	<LinearLayout 
+		android:orientation="horizontal" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"	
+		android:padding="2dip"
+		>
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+		>
+			<diablo.douban.common.LoaderImageView android:id="@+id/thumbnail" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"			
+				android:orientation="vertical"
+				android:padding="2dip"	
+						
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="发豆邮"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				android:id="@+id/doumail"
+				/>
+		</LinearLayout>
+		
+		<LinearLayout			
+			android:orientation="vertical"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:paddingLeft="5dip"			
+			android:paddingRight="5dip"				
+			>
+			
+				<TextView android:id="@+id/user_id" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					
+					
+					/>
+				<TextView android:id="@+id/user_name" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					
+						
+					/>		
+				<TextView android:id="@+id/location" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					/>
+		</LinearLayout>
+	</LinearLayout>
+	<LinearLayout 
+		android:orientation="vertical" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"	
+		android:padding="2dip"
+		>
+		<TextView android:id="@+id/alternate" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" 
+				/>
+		<TextView android:id="@+id/homepage" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" 
+				/>
+		<LinearLayout 
+			android:orientation="horizontal" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"	
+			android:padding="2dip"
+			>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="日记"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				android:id="@+id/note"
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="推荐"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="广播"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="收藏"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="评论"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				/>
+			<Button 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:text="活动"
+				android:background="@drawable/orange_btn"
+				android:layout_margin="2px"
+				android:textColor="#FFF"
+				/>
+		</LinearLayout>
+	</LinearLayout>
+	
+	<ScrollView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dip">
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/content_text"
+			android:textSize="12px"
+			 />	
+	</ScrollView>
+</LinearLayout>

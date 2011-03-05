@@ -18,6 +18,7 @@ import diablo.douban.accessor.pojo.DoubanUser;
 import diablo.douban.accessor.pojo.Doumail;
 import diablo.douban.common.LoaderImageView;
 import diablo.douban.doumail.ComposeDoumailActivity;
+import diablo.douban.user.UserDetailActivity;
 
 public class DoubanUserAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
@@ -73,7 +74,9 @@ public class DoubanUserAdapter extends BaseAdapter {
 		
 		holder.viewBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showInfo(position);
+				Intent intent = new Intent(activity, UserDetailActivity.class);				
+				intent.putExtra("user", user);
+				activity.startActivity(intent);
 			}
 		});
 		
