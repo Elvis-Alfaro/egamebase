@@ -1,7 +1,12 @@
 package diablo.douban.accessor.pojo;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /*
  <entry xmlns="http://www.w3.org/2005/Atom" xmlns:db="http://www.douban.com/xmlns/" xmlns:gd="http://schemas.google.com/g/2005" xmlns:opensearch="http://a9.com/-/spec/opensearchrss/1.0/">
@@ -25,6 +30,58 @@ import java.util.Date;
 </entry>
  */
 public class DoubanNote implements Serializable{
+	public static DoubanNote parseNote(Node entryNode){
+		DoubanNote note = new DoubanNote();
+		NodeList list = entryNode.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node node = list.item(i);
+			if (node.hasChildNodes()) {
+
+				String tag = node.getNodeName();
+				String value = node.getFirstChild().getNodeValue();
+				// Log.i("DoubanDiablo", tag + ": " + value);
+				if (tag.equals("id")) {
+					note.setId(value);
+				} else if (tag.equals("title")) {
+					note.setTitle(value);
+				} else if (tag.equals("published")) {
+					try {
+						note.setPublished(new SimpleDateFormat(
+								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				} else if(tag.equals("author")){
+					note.setAuthor(DoubanUser.parseUser(node));
+				}else if (tag.equals("updated")) {
+					try {
+						note.setUpdated(new SimpleDateFormat(
+								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				} else if (tag.equals("content")) {
+					note.setContent(value);
+				} else if(tag.equals("summary")){
+					note.setSummary(value);
+				}else if (tag.equals("db:attribute")) {
+					if (node.getAttributes().getNamedItem("name")
+							.getNodeValue().equals("can_reply") && value.equals("yes")) {						
+						note.setCanReply(true);						
+					} else if(node.getAttributes().getNamedItem("name")
+							.getNodeValue().equals("privacy")){
+						note.setPrivacy(value);
+					}
+				} 
+			} else {
+				
+			}
+		}
+
+		
+		return note;
+	}
+	
 	private String id;
 	private String title;
 	private DoubanUser author;

@@ -74,6 +74,10 @@ public class NoteDataProvider implements IDoubanDataProvider {
 		return null;
 	}
 
+	public String getTitle(){
+		return user.getTitle() + "的日志列表";
+	}
+	
 	@Override
 	public String getPaginatorText() {
 		// TODO Auto-generated method stub

@@ -117,6 +117,13 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 		return null;
 	}
 
+	public String getTitle(){
+		if(douban.getMe().getUid().equals(uid)){
+			return "我的友邻广播";
+		}else{
+			return douban.getMe().getTitle() + "的友邻广播";
+		}
+	}
 	
 	public String getPaginatorText() {
 		return "友邻广播";

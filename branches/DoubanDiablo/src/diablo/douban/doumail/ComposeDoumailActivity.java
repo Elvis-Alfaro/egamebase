@@ -92,7 +92,7 @@ public class ComposeDoumailActivity extends Activity{
 							captcha_url = tmp[1] + "=" + tmp[2];
 						}
 					}					
-					verifyImg.setImageDrawable(captcha_url);
+					verifyImg.setImageDrawable(captcha_url, false);
 					verifyText.setVisibility(View.VISIBLE);
 					verifyImg.setVisibility(View.VISIBLE);
 				}
@@ -125,7 +125,7 @@ public class ComposeDoumailActivity extends Activity{
 		if(mail != null){
 			if(mail.getTo() != null){
 				toText.setText(toText.getText() + mail.getTo().getTitle());
-				toImg.setImageDrawable(mail.getTo().getIcon());
+				toImg.setImageDrawable(mail.getTo().getIcon(), true);
 			}
 			if(mail.getFrom() != null){
 				currentUser.setText("From: " + mail.getFrom().getTitle());

@@ -1,10 +1,16 @@
 package diablo.douban.accessor.pojo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import java.io.Serializable;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class DoubanBroadcast implements Serializable{
 	private String id;
@@ -14,6 +20,51 @@ public class DoubanBroadcast implements Serializable{
 	private String content;
 	private Date time;
 	private Map<String, String> map = new HashMap<String, String>();
+	
+	public static DoubanBroadcast parseBroadcast(Node entryNode) {
+		DoubanBroadcast b = new DoubanBroadcast();
+		NodeList list = entryNode.getChildNodes();
+
+		for (int i = 0; i < list.getLength(); i++) {
+			Node node = list.item(i);
+			if (node.hasChildNodes()) {
+
+				String tag = node.getNodeName();
+				String value = node.getFirstChild().getNodeValue();
+				// Log.i("DoubanDiablo", tag + ": " + value);
+				if (tag.equals("id")) {
+					b.setId(value);
+				} else if (tag.equals("author")) {
+					b.setUser(DoubanUser.parseUser(node));
+				} else if (tag.equals("title")) {
+					b.setTitle(value);
+				} else if (tag.equals("published")) {
+					try {
+						b.setTime(new SimpleDateFormat(
+								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				} else if (tag.equals("content")) {
+					b.setContent(value);
+				} else if (tag.equals("db:attribute")) {
+					b.addAttribute(node.getAttributes().getNamedItem("name")
+							.getNodeValue(), value);
+				}
+			} else {
+				NamedNodeMap attrs = node.getAttributes();
+				if (node.getNodeName().equals("link")) {
+					b.addAttribute(attrs.getNamedItem("rel").getNodeValue(),
+							attrs.getNamedItem("href").getNodeValue());
+				} else if (node.getNodeName().equals("category")) {
+					b.setCategory(attrs.getNamedItem("term").getNodeValue()
+							.split("#miniblog\\.")[1]);
+					// Log.i("DoubanDiablo", b.getCategory());
+				}
+			}
+		}
+		return b;
+	}
 	
 	public String getId() {
 		return id;

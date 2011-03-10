@@ -92,10 +92,11 @@ public class LoaderImageView extends LinearLayout {
 	public LoaderImageView(final Context context, final AttributeSet attrSet) {
 		super(context, attrSet);
 		final String url = attrSet.getAttributeValue(null, "image");
+		final boolean saveFile = attrSet.getAttributeBooleanValue(null, "saveFile", false);
 		if (url != null) {
-			instantiate(context, url);
+			instantiate(context, url, saveFile);
 		} else {
-			instantiate(context, null);
+			instantiate(context, null, saveFile);
 		}		
 	}
 
@@ -111,14 +112,14 @@ public class LoaderImageView extends LinearLayout {
 	 */
 	public LoaderImageView(final Context context, final String imageUrl) {
 		super(context);
-		instantiate(context, imageUrl);
+		instantiate(context, imageUrl, false);
 	}
 
 	/**
 	 * First time loading of the LoaderImageView Sets up the LayoutParams of the
 	 * view, you can change these to get the required effects you want
 	 */
-	private void instantiate(final Context context, final String imageUrl) {
+	private void instantiate(final Context context, final String imageUrl, boolean saveFile) {
 		mContext = context;
 		if (mDatabase == null) {
 			mDatabase = DoubanDiablo.database;
@@ -136,7 +137,7 @@ public class LoaderImageView extends LinearLayout {
 		addView(mImage);
 
 		if (imageUrl != null) {
-			setImageDrawable(imageUrl);
+			setImageDrawable(imageUrl, saveFile);
 		}
 	}
 
@@ -147,14 +148,14 @@ public class LoaderImageView extends LinearLayout {
 	 * @param imageUrl
 	 *            the url of the image you wish to load
 	 */
-	public void setImageDrawable(final String imageUrl) {
+	public void setImageDrawable(final String imageUrl, final boolean saveImageFlag) {
 		mDrawable = null;
 		mSpinner.setVisibility(View.VISIBLE);
 		mImage.setVisibility(View.GONE);
 		new Thread() {
 			public void run() {
 				try {
-					mDrawable = getDrawableFromUrl(imageUrl);
+					mDrawable = getDrawableFromUrl(imageUrl, saveImageFlag);
 					imageLoadedHandler.sendEmptyMessage(COMPLETE);
 				} catch (MalformedURLException e) {
 					imageLoadedHandler.sendEmptyMessage(FAILED);
@@ -197,7 +198,7 @@ public class LoaderImageView extends LinearLayout {
 	 * @throws IOException
 	 * @throws MalformedURLException
 	 */
-	private static Drawable getDrawableFromUrl(final String url)
+	private static Drawable getDrawableFromUrl(final String url, final boolean saveImageFlag)
 			throws IOException, MalformedURLException {
 		if (imageMap.containsKey(url)) {
 			byte[] b = imageMap.get(url);
@@ -210,7 +211,9 @@ public class LoaderImageView extends LinearLayout {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			drawable.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, out);
 			byte[] array = out.toByteArray();
-			mDatabase.insertImage(url, array);
+			if(saveImageFlag){
+				mDatabase.insertImage(url, array);
+			}
 			if (!imageMap.containsKey(url)) {
 				imageMap.put(url, array);
 			}

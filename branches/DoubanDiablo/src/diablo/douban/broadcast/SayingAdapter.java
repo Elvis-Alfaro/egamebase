@@ -72,7 +72,7 @@ public class SayingAdapter  extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final DoubanBroadcast bd = mData.get(position);
-		holder.userImg.setImageDrawable(bd.getUser().getIcon());
+		holder.userImg.setImageDrawable(bd.getUser().getIcon(), true);
 		holder.user.setText(bd.getUser().getTitle());
 		if(bd.getTime() != null){
 			holder.time.setText(format.format(bd.getTime()));

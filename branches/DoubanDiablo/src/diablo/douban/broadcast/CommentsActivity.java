@@ -106,7 +106,7 @@ public class CommentsActivity extends AbstractProgressListActivity {
 		holder.time = (TextView) view.findViewById(R.id.saying_time);
 		holder.time.setVisibility(View.GONE); 
 		
-		holder.userImg.setImageDrawable(curBd.getUser().getIcon());
+		holder.userImg.setImageDrawable(curBd.getUser().getIcon(), true);
 		holder.user.setText(curBd.getUser().getTitle());
 		
 		String title = curBd.getTitle();

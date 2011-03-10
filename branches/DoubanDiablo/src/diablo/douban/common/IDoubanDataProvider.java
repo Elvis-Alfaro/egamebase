@@ -13,4 +13,6 @@ public interface IDoubanDataProvider {
 	
 	public View getFootView();
 	
+	public String getTitle();
+	
 }

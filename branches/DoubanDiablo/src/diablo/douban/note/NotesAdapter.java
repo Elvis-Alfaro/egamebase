@@ -77,7 +77,7 @@ public class NotesAdapter  extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final DoubanNote note = mData.get(position);
-		holder.userImg.setImageDrawable(note.getAuthor().getIcon());
+		holder.userImg.setImageDrawable(note.getAuthor().getIcon(), true);
 		holder.title.setText(note.getTitle());
 		if(note.getPublished() != null){
 			holder.time.setText(format.format(note.getPublished()));

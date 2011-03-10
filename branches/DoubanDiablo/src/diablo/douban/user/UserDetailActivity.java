@@ -34,7 +34,7 @@ public class UserDetailActivity extends AbstractProgressActivity{
 		TextView location = (TextView)findViewById(R.id.location);
 		
 		
-		thumbnail.setImageDrawable(user.getIcon());
+		thumbnail.setImageDrawable(user.getIcon(), true);
 		id.setText("id£º" + user.getUid());
 		name.setText("Ãû³Æ£º" + user.getTitle());
 		if(user.getLocation() != null){

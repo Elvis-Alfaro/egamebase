@@ -130,7 +130,7 @@ public class HomepageActivity extends ListActivity {
 		case friend: // friend
 			length = 15;
 			refreshPage = false;
-			dataProvider = new ContactDatasProvider(douban, this);			
+			dataProvider = new ContactDatasProvider(douban, this, current);			
 			break;
 		case note: // note
 			length = 5;
@@ -175,6 +175,7 @@ public class HomepageActivity extends ListActivity {
 
 	protected void onProgressComplete() {
 		setListAdapter(adapter);
+		currentPage.setText("µ±Ç°Î»ÖÃ£º" + dataProvider.getTitle());
 		if (extraHeadView != null) {
 			ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 					LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -328,12 +329,15 @@ public class HomepageActivity extends ListActivity {
 		return true;
 	}
 
+	TextView currentPage;
 	private void reloadHeadView(DoubanAuthData cur) {
 		LoaderImageView img = (LoaderImageView) headView
 				.findViewById(R.id.thumbnailMe);		
-		img.setImageDrawable(cur.getIcon());
+		img.setImageDrawable(cur.getIcon(), true);
 		TextView welcome = (TextView) headView.findViewById(R.id.welcome);
 		welcome.setText("»¶Ó­Äã£¬" + cur.getUsername());
+		
+		currentPage = (TextView)headView.findViewById(R.id.current_position);
 	}
 
 	@Override

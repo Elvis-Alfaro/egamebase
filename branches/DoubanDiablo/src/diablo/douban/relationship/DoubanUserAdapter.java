@@ -65,7 +65,7 @@ public class DoubanUserAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		final DoubanUser user = mData.get(position);
-		holder.img.setImageDrawable(user.getIcon());
+		holder.img.setImageDrawable(user.getIcon(), true);
 		holder.title.setText(user.getTitle());
 		if(user.getLocation() != null){
 			holder.info.setText("(" + user.getLocation() + ")");

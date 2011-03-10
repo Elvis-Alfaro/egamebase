@@ -60,7 +60,7 @@ public class ContactsActivity extends ListActivity {
 
 		View view = LayoutInflater.from(this).inflate(R.layout.header_me, null);
 		LoaderImageView me = (LoaderImageView)view.findViewById(R.id.thumbnailMe);
-		me.setImageDrawable(douban.getMe().getIcon());
+		me.setImageDrawable(douban.getMe().getIcon(), true);
 		TextView welcome = (TextView)view.findViewById(R.id.welcome);
 		welcome.setText(welcome.getText() + douban.getMe().getTitle());
 		
