@@ -79,7 +79,13 @@ public class DoumailDatasProvider implements IDoubanDataProvider {
 		return view;
 	}
 
-	
+	public String getTitle(){
+		if(inbox){
+			return "我的收件箱";
+		}else{
+			return "我的发件箱";
+		}
+	}
 	public View getHeaderView() {
 		
 		return null;

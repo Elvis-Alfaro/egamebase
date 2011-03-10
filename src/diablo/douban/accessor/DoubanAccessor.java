@@ -54,9 +54,13 @@ public class DoubanAccessor {
 	public static final String TAG = "Douban Accessor";
 	public static final String ME = "http://api.douban.com/people/%40me";
 	public static final String PEOPLE = "http://api.douban.com/people/{user_id}";
+	public static final String PEOPLE_ALBUMS = "http://api.douban.com/people/{user_id}/albums";
 	public static final String PEOPLE_SEARCH = "http://api.douban.com/people";
 	public static final String PEOPLE_FRIENDS = "http://api.douban.com/people/{userID}/friends";
 	public static final String PEOPLE_CONTACTS = "http://api.douban.com/people/{userID}/contacts";
+	public static final String ALBUM_DETAIL = "http://api.douban.com/album/{albumID}";
+	public static final String ALBUM_PHOTOS = "http://api.douban.com/album/{albumID}/photos";
+	public static final String PHOTO_DETAIL = "http://api.douban.com/photo/{photoID}";
 	public static final String BROADCASTS = "http://api.douban.com/people/{userID}/miniblog/contacts";
 	public static final String RECOMMENDATIONS = "http://api.douban.com/people/{userID}/recommendations";
 	public static final String BROADCASTS_COMMENTS = "http://api.douban.com/miniblog/{miniblogID}/comments";
@@ -272,26 +276,29 @@ public class DoubanAccessor {
 		Document doc = getDocument(url);
 
 		// Log.v("DoubanDiablo", XmlUtil.xmlDocumentToString(doc));
-		return parseUser(doc.getElementsByTagName("entry").item(0));
+		return DoubanUser.parseUser(doc.getElementsByTagName("entry").item(0));
 
 	}
 
 	public DoubanUser getPeopleByUrl(String url){
 		Document doc = getDocument(url);
-		return parseUser(doc.getElementsByTagName("entry").item(0));
+		return DoubanUser.parseUser(doc.getElementsByTagName("entry").item(0));
 	}
 	
-	public List<DoubanUser> getPeopleFriends(String userid, int start, int max) {
+	public List<DoubanUser> getPeopleFriends(DoubanUser user, int start, int max) {
 		String url = "";
-		String authUrl = "";
-		if (userid == null || userid.equals("")) {
+		
+		String userid = "";
+		if (user == null) {
 			if (me == null) {
 				me = getPeople(null);
 			}
 			userid = me.getUid();
+		}else{
+			userid = user.getUid();
 		}
 
-		authUrl = PEOPLE_CONTACTS;
+		
 		url = PEOPLE_CONTACTS.replace("{userID}", userid) + "?start-index="
 				+ start + "&max-results=" + max;
 		Log.i("DoubanDiablo", " " + url);
@@ -303,7 +310,7 @@ public class DoubanAccessor {
 		NodeList entryList = doc.getElementsByTagName("entry");
 		//Log.i("DoubanDiablo", " " + entryList.getLength());
 		for (int i = 0; i < entryList.getLength(); i++) {
-			friendList.add(parseUser(entryList.item(i)));
+			friendList.add(DoubanUser.parseUser(entryList.item(i)));
 			// Log.i("DoubanDiablo",
 			// parseUser(entryList.item(i).getChildNodes()).toString());
 		}
@@ -382,7 +389,7 @@ public class DoubanAccessor {
 			post.setEntity(myEntity);
 			HttpResponse resp = httpclient.execute(post);
 			Document doc = documentBuilder.parse(resp.getEntity().getContent());
-			return parseNote(doc.getElementsByTagName("entry").item(0));
+			return DoubanNote.parseNote(doc.getElementsByTagName("entry").item(0));
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 			return null;
@@ -481,7 +488,7 @@ public class DoubanAccessor {
 	public Doumail getDoumail(String url){
 		Document doc = getDocument(url);
 		NodeList entryList = doc.getElementsByTagName("entry");
-		return parseDoumail(entryList.item(0));
+		return Doumail.parseDoumail(entryList.item(0), me);
 	}
 	
 	public List<Doumail> getDoumailList(String box, boolean unread, int start,
@@ -501,7 +508,7 @@ public class DoubanAccessor {
 		Document doc = getDocument(url);
 		NodeList entryList = doc.getElementsByTagName("entry");
 		for (int i = 0; i < entryList.getLength(); i++) {
-			list.add(parseDoumail(entryList.item(i)));
+			list.add(Doumail.parseDoumail(entryList.item(i), me));
 		}
 
 		if (doc.getElementsByTagName("openSearch:totalResults").getLength() > 0) {
@@ -536,7 +543,7 @@ public class DoubanAccessor {
 		NodeList entryList = doc.getElementsByTagName("entry");
 		
 		for (int i = 0; i < entryList.getLength(); i++) {
-			matchList.add(parseUser(entryList.item(i)));
+			matchList.add(DoubanUser.parseUser(entryList.item(i)));
 		}
 		
 		if (doc.getElementsByTagName("openSearch:totalResults").getLength() > 0) {
@@ -573,7 +580,7 @@ public class DoubanAccessor {
 		Log.i("DoubanDiablo", " ~~:" + entryList.getLength());
 
 		for (int i = 0; i < entryList.getLength(); i++) {
-			list.add(parseBroadcast(entryList.item(i)));
+			list.add(DoubanBroadcast.parseBroadcast(entryList.item(i)));
 		}
 		return list;
 	}
@@ -587,7 +594,7 @@ public class DoubanAccessor {
 		// Log.i("DoubanDiablo", " ~~:" + entryList.getLength());
 
 		for (int i = 0; i < entryList.getLength(); i++) {
-			list.add(parseBroadcast(entryList.item(i)));
+			list.add(DoubanBroadcast.parseBroadcast(entryList.item(i)));
 		}
 		totalResults = doc.getElementsByTagName("openSearch:totalResults")
 				.item(0).getFirstChild().getNodeValue();
@@ -614,7 +621,7 @@ public class DoubanAccessor {
 		NodeList entryList = doc.getElementsByTagName("entry");
 		
 		for (int i = 0; i < entryList.getLength(); i++) {
-			DoubanNote note = parseNote(entryList.item(i));
+			DoubanNote note = DoubanNote.parseNote(entryList.item(i));
 			
 			note.setAuthor(user);
 			
@@ -623,197 +630,9 @@ public class DoubanAccessor {
 		
 		return list;
 	}
-	
-	private static DoubanNote parseNote(Node entryNode){
-		DoubanNote note = new DoubanNote();
-		NodeList list = entryNode.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node node = list.item(i);
-			if (node.hasChildNodes()) {
-
-				String tag = node.getNodeName();
-				String value = node.getFirstChild().getNodeValue();
-				// Log.i("DoubanDiablo", tag + ": " + value);
-				if (tag.equals("id")) {
-					note.setId(value);
-				} else if (tag.equals("title")) {
-					note.setTitle(value);
-				} else if (tag.equals("published")) {
-					try {
-						note.setPublished(new SimpleDateFormat(
-								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				} else if(tag.equals("author")){
-					note.setAuthor(parseUser(node));
-				}else if (tag.equals("updated")) {
-					try {
-						note.setUpdated(new SimpleDateFormat(
-								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				} else if (tag.equals("content")) {
-					note.setContent(value);
-				} else if(tag.equals("summary")){
-					note.setSummary(value);
-				}else if (tag.equals("db:attribute")) {
-					if (node.getAttributes().getNamedItem("name")
-							.getNodeValue().equals("can_reply") && value.equals("yes")) {						
-						note.setCanReply(true);						
-					} else if(node.getAttributes().getNamedItem("name")
-							.getNodeValue().equals("privacy")){
-						note.setPrivacy(value);
-					}
-				} 
-			} else {
-				
-			}
-		}
-
-		
-		return note;
-	}
-	private static Doumail parseDoumail(Node entryNode) {
-		Doumail mail = new Doumail();
-		NodeList list = entryNode.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node node = list.item(i);
-			if (node.hasChildNodes()) {
-
-				String tag = node.getNodeName();
-				String value = node.getFirstChild().getNodeValue();
-				// Log.i("DoubanDiablo", tag + ": " + value);
-				if (tag.equals("id")) {
-					mail.setId(value);
-				} else if (tag.equals("author")) {
-					mail.setFrom(parseUser(node));
-					mail.setTo(me);
-				} else if (tag.equals("title")) {
-					mail.setTitle(value);
-				} else if (tag.equals("published")) {
-					try {
-						mail.setTime(new SimpleDateFormat(
-								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				} else if (tag.equals("content")) {
-					mail.setContent(value);
-				} else if (tag.equals("db:attribute")) {
-					if (node.getAttributes().getNamedItem("name")
-							.getNodeValue().equals("unread") && value.equals("true")) {						
-							mail.setUnread(true);						
-					} 
-				} else if (tag.equals("db:entry")) {
-					mail.setTo(parseUser(node));
-					mail.setFrom(me);
-				}
-			} else {
-				/*
-				 * NamedNodeMap attrs = node.getAttributes(); if
-				 * (attrs.getNamedItem("rel").getNodeValue().equals("self")) {
-				 * 
-				 * mail.setSelf(attrs.getNamedItem("href").getNodeValue()); }
-				 * else if (attrs.getNamedItem("rel").getNodeValue().equals(
-				 * "alternate")) { mail .setAlternate(attrs.getNamedItem("href")
-				 * .getNodeValue()); // Log.i("DoubanDiablo", b.getCategory());
-				 * }
-				 */
-			}
-		}
-
-		return mail;
-	}
-
-	private static DoubanUser parseUser(Node entryNode) {
-		DoubanUser user = new DoubanUser();
-		NodeList list = entryNode.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			if (list.item(i).hasChildNodes()) {
-				Node node = list.item(i);
-				String tag = node.getNodeName();
-				String value = node.getFirstChild().getNodeValue();
-				//Log.i("DoubanDiablo", "~~~" + tag + ": " + value);
-				if (tag.equalsIgnoreCase("id")) {
-					user.setId(value);
-				} else if (tag.equalsIgnoreCase("db:uid")) {
-					user.setUid(value);
-				} else if (tag.equalsIgnoreCase("title")) {
-					user.setTitle(value);
-				} else if (tag.equalsIgnoreCase("db:location")) {
-					user.setLocation(value);
-				} else if (tag.equalsIgnoreCase("content")) {
-					user.setContent(value);
-				} else if (tag.equals("name")) {
-					user.setTitle(value);
-				} else if (tag.equals("uri")) {
-					user.setId(value);
-				}
-			} else if (list.item(i).hasAttributes()) {
-				NamedNodeMap attr = list.item(i).getAttributes();
-				String ref = attr.getNamedItem("rel").getNodeValue();
-				String href = attr.getNamedItem("href").getNodeValue();
-				if (ref.equals("alternate")) {
-					user.setAlternate(href);
-				} else if (ref.equals("icon")) {
-					user.setIcon(href);
-				} else if (ref.equals("homepage")) {
-					user.setHomepage(href);
-				}
-			}
-		}
-		return user;
-	}
-
-	private static DoubanBroadcast parseBroadcast(Node entryNode) {
-		DoubanBroadcast b = new DoubanBroadcast();
-		NodeList list = entryNode.getChildNodes();
-
-		for (int i = 0; i < list.getLength(); i++) {
-			Node node = list.item(i);
-			if (node.hasChildNodes()) {
-
-				String tag = node.getNodeName();
-				String value = node.getFirstChild().getNodeValue();
-				// Log.i("DoubanDiablo", tag + ": " + value);
-				if (tag.equals("id")) {
-					b.setId(value);
-				} else if (tag.equals("author")) {
-					b.setUser(parseUser(node));
-				} else if (tag.equals("title")) {
-					b.setTitle(value);
-				} else if (tag.equals("published")) {
-					try {
-						b.setTime(new SimpleDateFormat(
-								"yyyy-MM-dd'T'HH:mm:ss'+08:00'").parse(value));
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-				} else if (tag.equals("content")) {
-					b.setContent(value);
-				} else if (tag.equals("db:attribute")) {
-					b.addAttribute(node.getAttributes().getNamedItem("name")
-							.getNodeValue(), value);
-				}
-			} else {
-				NamedNodeMap attrs = node.getAttributes();
-				if (node.getNodeName().equals("link")) {
-					b.addAttribute(attrs.getNamedItem("rel").getNodeValue(),
-							attrs.getNamedItem("href").getNodeValue());
-				} else if (node.getNodeName().equals("category")) {
-					b.setCategory(attrs.getNamedItem("term").getNodeValue()
-							.split("#miniblog\\.")[1]);
-					// Log.i("DoubanDiablo", b.getCategory());
-				}
-			}
-		}
-		return b;
-	}
 
 	public Document getPeopleInfo(String peopleId) {
-		String url = PEOPLE.replace("{user_id}", peopleId);
+		String url = PEOPLE.replace("{userID}", peopleId);
 
 		HttpGet get = new HttpGet(url);
 

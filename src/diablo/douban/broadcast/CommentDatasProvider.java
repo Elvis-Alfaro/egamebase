@@ -79,4 +79,11 @@ public class CommentDatasProvider implements IDoubanDataProvider {
 		return "¹ã²¥»Ø¸´";
 	}
 
+
+	@Override
+	public String getTitle() {
+		// TODO Auto-generated method stub
+		return getPaginatorText();
+	}
+
 }

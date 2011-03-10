@@ -15,7 +15,7 @@ public class HeadViewInflateHelper {
 	public static View inflateMe(Context context, String name, String icon){		
 		View view = LayoutInflater.from(context).inflate(R.layout.header_me, null);
 		LoaderImageView img = (LoaderImageView)view.findViewById(R.id.thumbnailMe);
-		img.setImageDrawable(icon);
+		img.setImageDrawable(icon, true);
 		TextView welcome = (TextView)view.findViewById(R.id.welcome);
 		welcome.setText(welcome.getText() + name);
 		return view;

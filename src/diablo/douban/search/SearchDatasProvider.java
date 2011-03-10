@@ -123,6 +123,10 @@ public class SearchDatasProvider implements IDoubanDataProvider {
 		return null;
 	}
 
+	public String getTitle(){
+		return getPaginatorText();
+	}
+	
 	public String getPaginatorText() {
 		if(keyword == null || keyword.trim().equals("")){
 			return "豆瓣搜索(搜用户/影/音/书)";

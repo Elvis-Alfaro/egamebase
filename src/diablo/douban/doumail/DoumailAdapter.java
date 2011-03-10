@@ -88,7 +88,7 @@ public class DoumailAdapter extends BaseAdapter {
 			holder.newDoumail.setVisibility(View.VISIBLE);
 		}
 		
-		holder.userImg.setImageDrawable(bd.getFrom().getIcon());
+		holder.userImg.setImageDrawable(bd.getFrom().getIcon(), true);
 		holder.user.setText("À´×Ô£º" + bd.getFrom().getTitle());
 		if(bd.getTime() != null){
 			holder.time.setText(format.format(bd.getTime()));
