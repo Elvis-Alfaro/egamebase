@@ -50,17 +50,27 @@
 					android:layout_alignParentRight="true"
 					/>				
 			</RelativeLayout>		
-			<LinearLayout android:orientation="horizontal"
-				android:layout_width="wrap_content" 
+			<RelativeLayout android:orientation="horizontal"
+				android:layout_width="fill_parent" 
 				android:layout_height="wrap_content"
 				android:paddingLeft="10dip">
 				<TextView android:id="@+id/saying_detail" 
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
+					android:layout_height="wrap_content"					
 					android:textColor="#EEE"					
-					android:textColorLink="@color/link_color" 
+					android:textColorLink="@color/link_color"	
+					android:layout_alignParentLeft="true"
+					android:layout_toLeftOf="@+id/relate_image"				 
 					android:textSize="14px" />
-			</LinearLayout>
+				<diablo.douban.common.LoaderImageView android:id="@+id/relate_image" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right"
+					
+					android:layout_alignParentRight="true"
+					android:visibility="gone"
+					 />
+			</RelativeLayout>
 			
 			<RelativeLayout 
 				android:layout_width="wrap_content" 

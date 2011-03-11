@@ -42,9 +42,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import diablo.douban.DoubanDiablo;
+import diablo.douban.accessor.pojo.DoubanAlbum;
 import diablo.douban.accessor.pojo.DoubanAuthData;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.accessor.pojo.DoubanNote;
+import diablo.douban.accessor.pojo.DoubanPhoto;
 import diablo.douban.accessor.pojo.DoubanUser;
 import diablo.douban.accessor.pojo.Doumail;
 
@@ -471,6 +473,67 @@ public class DoubanAccessor {
 		}
 	}
 
+
+	public DoubanPhoto getPhoto(String pid){
+		Document doc = getDocument(PHOTO_DETAIL.replace("{photoID}", pid));
+		NodeList entryList = doc.getElementsByTagName("entry");
+		return DoubanPhoto.parsePhoto(entryList.item(0));
+	}
+	
+	public DoubanAlbum getAlbumDetail(String albumID){
+		Document doc = getDocument(ALBUM_DETAIL.replace("{albumID}", albumID));
+		NodeList entryList = doc.getElementsByTagName("entry");
+		return DoubanAlbum.parseAlbum(entryList.item(0));
+	}
+	
+	public List<DoubanAlbum> getPeopleAlbums(String uid, int start, int max){
+		List<DoubanAlbum> list = new ArrayList<DoubanAlbum>();
+		String url = "";
+		if(uid.startsWith("http")){
+			url = uid + "/albums";
+		}else{
+			url = PEOPLE_ALBUMS.replace("{userID}", uid);
+		}
+		
+		Document doc = getDocument(url + "?start-index=" + start + "&max-results=" + max);		
+		NodeList entryList = doc.getElementsByTagName("entry");
+		for (int i = 0; i < entryList.getLength(); i++) {
+			list.add(DoubanAlbum.parseAlbum(entryList.item(i)));
+		}
+		return list;
+	}
+	public List<DoubanPhoto> getAlbumPhotos(String albumID, int start, int max){
+		String url = "";
+		if(albumID.startsWith("http")){
+			url = albumID + "/photos";
+		}else{
+			url = ALBUM_PHOTOS.replace("{albumID}", albumID);
+		}
+		
+		Document doc = getDocument(url + "?start-index=" + start + "&max-results=" + max);
+		List<DoubanPhoto> list = new ArrayList<DoubanPhoto>();
+		
+		NodeList entryList = doc.getElementsByTagName("entry");
+		for (int i = 0; i < entryList.getLength(); i++) {
+			list.add(DoubanPhoto.parsePhoto(entryList.item(i)));
+		}
+
+		if (doc.getElementsByTagName("openSearch:totalResults").getLength() > 0) {
+			totalResults = doc.getElementsByTagName("openSearch:totalResults")
+					.item(0).getFirstChild().getNodeValue();
+		}
+		if (doc.getElementsByTagName("openSearch:itemsPerPage").getLength() > 0) {
+			itemsPerPage = doc.getElementsByTagName("openSearch:itemsPerPage")
+					.item(0).getFirstChild().getNodeValue();
+		}
+		if (doc.getElementsByTagName("openSearch:startIndex").getLength() > 0) {
+			startIndex = doc.getElementsByTagName("openSearch:startIndex")
+					.item(0).getFirstChild().getNodeValue();
+		}
+
+		return list;
+	}
+	
 	public String deleteDoumail(String url){
 		HttpDelete delete = new HttpDelete(url);
 		delete.addHeader("Authorization", getAuthHeader("DELETE", url));
