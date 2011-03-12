@@ -2,6 +2,8 @@ package diablo.douban.broadcast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
+import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.common.LoaderImageView;
 import diablo.douban.user.UserDetailActivity;
@@ -74,6 +77,8 @@ public class SayingAdapter extends BaseAdapter {
 			holder.time = (TextView) convertView.findViewById(R.id.saying_time);
 			holder.detailImg = (LoaderImageView) convertView
 					.findViewById(R.id.relate_image);
+			holder.view_detail_btn = (Button) convertView
+				.findViewById(R.id.view_detail_btn);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -86,7 +91,7 @@ public class SayingAdapter extends BaseAdapter {
 		}
 		String title = bd.getTitle();
 
-		String comment_count = bd.getMap().get("comments_count");
+		String comment_count = (String)bd.getMap().get("comments_count");
 
 		String category = bd.getCategory();
 		// Log.i("DoubanDiablo", "comment_count: " + comment_count +
@@ -102,10 +107,11 @@ public class SayingAdapter extends BaseAdapter {
 					holder.reply.setText("回应");
 				}
 				holder.replyText.setVisibility(View.GONE);
-			} else if (bd.getCategory().equals("recommendation")) {
+				holder.view_detail_btn.setVisibility(View.GONE);
+			} else if (category.equals("recommendation")) {
 				if (bd.getMap().get("comment") != null
 						&& !bd.getMap().get("comment").equals("")) {
-					holder.replyText.setText(bd.getMap().get("comment").trim());
+					holder.replyText.setText(((String)bd.getMap().get("comment")).trim());
 					holder.replyText.setVisibility(View.VISIBLE);
 				} else {
 					holder.replyText.setVisibility(View.GONE);
@@ -115,10 +121,37 @@ public class SayingAdapter extends BaseAdapter {
 					holder.reply.setText(comment_count + "回应");
 				} else {
 					holder.reply.setText("回应");
-				}
+				}				
 				holder.reply.setVisibility(View.VISIBLE);
+				
+				if (bd.getMap().get("category") != null ){
+					if(bd.getMap().get("category").equals("photo")){
+						holder.view_detail_btn.setText("照片详情");
+						holder.view_detail_btn.setVisibility(View.VISIBLE);
+					}else if(bd.getMap().get("category").equals("photo_album")){
+						holder.view_detail_btn.setText("相册详情");
+						holder.view_detail_btn.setVisibility(View.VISIBLE);
+					} else{
+						holder.view_detail_btn.setVisibility(View.GONE);
+					}
+				}
+			} else if(category.equals("photo")){
+				holder.view_detail_btn.setVisibility(View.VISIBLE);
+				holder.view_detail_btn.setText("照片详情");
+				holder.reply.setVisibility(View.GONE);
+				holder.replyText.setVisibility(View.GONE);
+			}else{
+				holder.replyText.setVisibility(View.GONE);
+				holder.reply.setVisibility(View.GONE);
+				holder.view_detail_btn.setVisibility(View.GONE);
 			}
 		} else {
+			if (bd.getMap().get("category") != null && bd.getMap().get("category").equals("photo")){				
+				holder.view_detail_btn.setText("照片详情");
+				holder.view_detail_btn.setVisibility(View.VISIBLE);				
+			}else{			
+				holder.view_detail_btn.setVisibility(View.GONE);
+			}
 			holder.replyText.setVisibility(View.GONE);
 			holder.reply.setVisibility(View.GONE);
 		}
@@ -132,12 +165,18 @@ public class SayingAdapter extends BaseAdapter {
 
 		// holder.detail.setVisibility(View.GONE);
 		if (bd.getMap().get("image") != null) {
-			holder.detailImg.setImageDrawable(bd.getMap().get("image"), false);
+			holder.detailImg.setImageDrawable((String)bd.getMap().get("image"), false);
 			holder.detailImg.setVisibility(View.VISIBLE);
 		} else {
 			holder.detailImg.setVisibility(View.GONE);
 		}
 
+		holder.view_detail_btn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				
+			}
+		});
+		
 		holder.user.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				/*
@@ -179,6 +218,7 @@ final class ViewHolder {
 	public TextView info;
 	public TextView time;
 	public TextView detail;
+	public Button view_detail_btn;
 	public TextView replyText;
 	public Button reply;
 }

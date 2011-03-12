@@ -1,5 +1,6 @@
 package diablo.douban.accessor.pojo;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,7 +38,7 @@ import org.w3c.dom.NodeList;
 </entry> 
 */
 
-public class DoubanPhoto {
+public class DoubanPhoto  implements Serializable{
 	public static DoubanPhoto parsePhoto(Node entryNode){
 		DoubanPhoto photo = new DoubanPhoto();
 		NodeList list = entryNode.getChildNodes();

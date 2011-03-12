@@ -38,7 +38,7 @@ public class DoubanUser  implements Serializable{
 				} else if (tag.equals("name")) {
 					user.setTitle(value);
 				} else if (tag.equals("uri")) {
-					user.setId(value);
+					user.setId(value); 
 				}
 			} else if (list.item(i).hasAttributes()) {
 				NamedNodeMap attr = list.item(i).getAttributes();

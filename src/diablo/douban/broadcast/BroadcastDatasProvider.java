@@ -2,20 +2,21 @@ package diablo.douban.broadcast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.ListActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import diablo.douban.R;
 import diablo.douban.accessor.DoubanAccessor;
-import diablo.douban.accessor.pojo.DoubanAuthData;
+import diablo.douban.accessor.pojo.DoubanAlbum;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
+import diablo.douban.accessor.pojo.DoubanPhoto;
 import diablo.douban.common.HomepageActivity;
 import diablo.douban.common.IDoubanDataProvider;
 import diablo.douban.common.LoaderImageView;
@@ -43,8 +44,39 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 			if(b.getUser()!=null && iconList.contains(b.getUser().getIcon())){
 				iconList.add(b.getUser().getIcon());				
 			}
+			
+			if(b.getCategory().equals("photo")){
+				Matcher match = Pattern.compile(".*\\/photo\\/(\\d+)\\/.*").matcher(b.getContent());			
+				if(match.find()){
+					String pid = match.group(1);
+					DoubanPhoto photo = douban.getPhoto(pid);
+					b.getMap().put("image", photo.getIcon());
+					b.getMap().put("object", photo);
+				}
+			}
+			
+			if(b.getMap().get("category")!=null){
+				if(b.getMap().get("category").equals("photo_album")){
+					Matcher match = Pattern.compile(".*\\/photos\\/album\\/(\\d+)\\/.*").matcher(b.getContent());			
+					if(match.find()){
+						String pid = match.group(1);
+						DoubanAlbum album = douban.getAlbumDetail(pid);
+						b.getMap().put("image", album.getCover_thumb());
+						b.getMap().put("object", album);
+					}
+				}else if(b.getMap().get("category").equals("photo")){
+					Matcher match = Pattern.compile(".*\\/photo\\/(\\d+)\\/.*").matcher(b.getContent());			
+					if(match.find()){
+						String pid = match.group(1);					
+						DoubanPhoto photo = douban.getPhoto(pid);
+						b.getMap().put("image", photo.getIcon());
+						b.getMap().put("photo_object", photo);
+					}
+				}
+			}
 		}
 		LoaderImageView.loadDatasIntoMap(iconList);
+		
 		
 		return new SayingAdapter(activity, list);
 	}
