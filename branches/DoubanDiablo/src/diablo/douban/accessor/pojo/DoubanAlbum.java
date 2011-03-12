@@ -1,5 +1,6 @@
 package diablo.douban.accessor.pojo;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +32,7 @@ import org.w3c.dom.NodeList;
 	<db:attribute name="recs_count">51</db:attribute> 
 </entry> 
  */
-public class DoubanAlbum {
+public class DoubanAlbum  implements Serializable{
 	
 	public static DoubanAlbum parseAlbum(Node entryNode){
 		DoubanAlbum album = new DoubanAlbum();

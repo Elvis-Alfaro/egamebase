@@ -19,7 +19,7 @@ public class DoubanBroadcast implements Serializable{
 	private String category;
 	private String content;
 	private Date time;
-	private Map<String, String> map = new HashMap<String, String>();
+	private Map<String, Object> map = new HashMap<String, Object>();
 	
 	public static DoubanBroadcast parseBroadcast(Node entryNode) {
 		DoubanBroadcast b = new DoubanBroadcast();
@@ -103,10 +103,10 @@ public class DoubanBroadcast implements Serializable{
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	public Map<String, String> getMap() {
+	public Map<String, Object> getMap() {
 		return map;
 	}
-	public void setMap(Map<String, String> map) {
+	public void setMap(Map<String, Object> map) {
 		this.map = map;
 	}
 	

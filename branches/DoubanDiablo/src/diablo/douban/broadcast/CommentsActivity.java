@@ -98,8 +98,9 @@ public class CommentsActivity extends AbstractProgressListActivity {
 				.findViewById(R.id.saying_reply);
 		holder.reply = (Button) view.findViewById(R.id.saying_reply_btn);
 		holder.reply.setVisibility(View.GONE);
-		holder.replyText.setText(curBd.getMap().get("comment"));
-		
+		holder.replyText.setText((String)curBd.getMap().get("comment"));
+		holder.detailImg = (LoaderImageView) view
+			.findViewById(R.id.relate_image);
 		
 		holder.detail = (TextView) view.findViewById(R.id.saying_detail);
 		holder.detail.setBackgroundColor(0); 
@@ -120,6 +121,14 @@ public class CommentsActivity extends AbstractProgressListActivity {
 		holder.detail.setMovementMethod(LinkMovementMethod.getInstance());
 		holder.detail.setText(android.text.Html.fromHtml(curBd.getContent()));
 		//holder.detail.loadDataWithBaseURL (null, curBd.getContent(), "text/html", "utf-8",null);
+		
+		if (curBd.getMap().get("image") != null) {
+			holder.detailImg.setImageDrawable((String)curBd.getMap().get("image"), false);
+			holder.detailImg.setVisibility(View.VISIBLE);
+		} else {
+			holder.detailImg.setVisibility(View.GONE);
+		}
+		
 		return view;
 	}
 
