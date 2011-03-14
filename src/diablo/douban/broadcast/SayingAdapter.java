@@ -2,14 +2,11 @@ package diablo.douban.broadcast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Looper;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
-import diablo.douban.accessor.DoubanAccessor;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
+import diablo.douban.accessor.pojo.DoubanPhoto;
 import diablo.douban.common.LoaderImageView;
 import diablo.douban.user.UserDetailActivity;
 
@@ -173,7 +170,12 @@ public class SayingAdapter extends BaseAdapter {
 
 		holder.view_detail_btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
+				Object o = bd.getMap().get("object");
+				if(o != null){
+					if(o instanceof DoubanPhoto){
+						Log.i("DoubanDiablo", o.toString());
+					}
+				}
 			}
 		});
 		
