@@ -96,7 +96,8 @@
 					/>
 				<Button android:id="@+id/view_detail_btn" 
 					android:layout_width="wrap_content"
-					android:text="详情"					
+					android:text="详情"	
+					android:visibility="gone"
 					android:background="@drawable/orange_btn"
 					android:layout_height="wrap_content" 
 					android:textColor="#FFF"
