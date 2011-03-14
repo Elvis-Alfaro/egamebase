@@ -34,7 +34,6 @@ public class NoteDataProvider implements IDoubanDataProvider {
 		//Log.i("DoubanDiablo", "in BroadcastDatasProvider: " + (listener == null));
 	}
 	
-	@Override
 	public ListAdapter getDatas(int start) {
 		List<DoubanNote> list = douban.getNotes(user, start, length);
 		for(DoubanNote n : list){
@@ -43,7 +42,6 @@ public class NoteDataProvider implements IDoubanDataProvider {
 		return new NotesAdapter(activity, list);
 	}
 
-	@Override
 	public View getFootView() {
 		RelativeLayout view = new RelativeLayout(activity);
 		
@@ -68,7 +66,6 @@ public class NoteDataProvider implements IDoubanDataProvider {
 		return view;
 	}
 
-	@Override
 	public View getHeaderView() {
 		// TODO Auto-generated method stub
 		return null;
@@ -78,7 +75,6 @@ public class NoteDataProvider implements IDoubanDataProvider {
 		return user.getTitle() + "的日志列表";
 	}
 	
-	@Override
 	public String getPaginatorText() {
 		// TODO Auto-generated method stub
 		return "日志列表";
