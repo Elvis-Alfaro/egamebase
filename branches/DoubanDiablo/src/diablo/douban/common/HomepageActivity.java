@@ -123,6 +123,7 @@ public class HomepageActivity extends ListActivity {
 	
 		switch (type) {
 		case broadcast: // home page
+			refreshPage = false;
 			length = 15;
 			dataProvider = new BroadcastDatasProvider(douban, this, current.getUid());
 			marginPixelBottom = 40;
@@ -225,8 +226,9 @@ public class HomepageActivity extends ListActivity {
 		if (DoubanAuthData.getCurrent() != null) {
 			reloadHeadView(DoubanAuthData.getCurrent());
 		}
-		removeExtraView();
+		
 		if(refreshPage){
+			removeExtraView();
 			showDialog(0);
 		}
 	}

@@ -70,7 +70,7 @@ public class BroadcastDatasProvider implements IDoubanDataProvider {
 						String pid = match.group(1);					
 						DoubanPhoto photo = douban.getPhoto(pid);
 						b.getMap().put("image", photo.getIcon());
-						b.getMap().put("photo_object", photo);
+						b.getMap().put("object", photo);
 					}
 				}
 			}
