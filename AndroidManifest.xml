@@ -27,6 +27,10 @@
 			android:theme="@android:style/Theme.Dialog">
 		</activity>
 		
+		<activity android:name=".album.PhotoDetailActivity"
+			 android:label="照片详情"
+			 android:theme="@android:style/Theme.Dialog">
+		</activity>
 		<activity android:name=".broadcast.SayingActivity"
 			 android:label="@string/broadcast">
 		</activity>

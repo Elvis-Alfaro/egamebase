@@ -18,6 +18,7 @@ import diablo.douban.DoubanDiablo;
 import diablo.douban.R;
 import diablo.douban.accessor.pojo.DoubanBroadcast;
 import diablo.douban.accessor.pojo.DoubanPhoto;
+import diablo.douban.album.PhotoDetailActivity;
 import diablo.douban.common.LoaderImageView;
 import diablo.douban.user.UserDetailActivity;
 
@@ -173,7 +174,9 @@ public class SayingAdapter extends BaseAdapter {
 				Object o = bd.getMap().get("object");
 				if(o != null){
 					if(o instanceof DoubanPhoto){
-						Log.i("DoubanDiablo", o.toString());
+						Intent intent = new Intent(activity, PhotoDetailActivity.class);
+						intent.putExtra("photo", (DoubanPhoto)o);
+						activity.startActivity(intent);
 					}
 				}
 			}
